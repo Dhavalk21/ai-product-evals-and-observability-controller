@@ -127,34 +127,53 @@ with tab2:
 # ----------------------------------------------------
 with tab3:
     st.header("🧪 Interactive Eval Sandbox Simulator")
-    st.markdown("Simulate an automated quality loop. Edit the text boxes below to see how changes to the source context alter the system's evaluation scores instantly.")
+    st.markdown("Simulate an automated quality loop. Edit the text boxes below to see how changes to the AI's response alter the evaluation scores instantly.")
     
     scenario_choice = st.radio("Choose a base scenario archetype to load:", list(data["sandbox_scenarios"].keys()))
     scenario = data["sandbox_scenarios"][scenario_choice]
     
     # Layout the editable fields
-    ctx_input = st.text_area("Step 1: Modify the Context (Knowledge Base reference rules)", scenario["context"], height=90)
+    ctx_input = st.text_area("Step 1: Context (Knowledge Base reference rules)", scenario["context"], height=90)
     query_input = st.text_area("Step 2: Enter the User Query", scenario["query"], height=70)
-    output_input = st.text_area("Step 3: Modify the AI Generated Output", scenario["output"], height=70)
+    output_input = st.text_area("Step 3: Modify the AI Generated Output (Try adding a lie or changing the answer!)", scenario["output"], height=70)
     
     if st.button("🚀 Run Live Evaluation Mock Pipeline", type="primary"):
         st.divider()
         st.subheader("🎯 Automated Evaluation Pipeline Results")
         
-        # Check if user changed the output text to simulate interactive overrides
-        is_modified = (output_input != scenario["output"])
+        # Check if the user modified the text
+        is_modified = (output_input.strip() != scenario["output"].strip())
         
+        # DYNAMIC HEURISTICS CLASSIFIER (Simulating the Judge locally)
+        # Catch common words users type when testing a failure
+        fail_keywords = ["yes", "refund", "free", "money back", "can return", "hallucination", "fake", "wrong"]
+        contains_fail_move = any(word in output_input.lower() for word in fail_keywords) if is_modified else False
+
+        # Determine dynamic scores
+        if not is_modified:
+            calculated_groundedness = scenario["groundedness_score"]
+            reasoning = scenario["groundedness_reason"]
+        elif scenario_choice == "Scenario A: High Quality Run" and contains_fail_move:
+            # User edited the good response to make it incorrectly say "Yes"
+            calculated_groundedness = 0.0
+            reasoning = "⚠️ **Dynamic Rule Catch:** The user modified the output to promise a refund, which directly violates the non-refundable digital download context rule!"
+        elif scenario_choice == "Scenario B: Severe Hallucination" and ("no" in output_input.lower() or "cannot" in output_input.lower()):
+            # User fixed the bad response to make it correct
+            calculated_groundedness = 1.0
+            reasoning = "✅ **Dynamic Rule Catch:** Excellent! You corrected the hallucination. The response now accurately reflects the system constraints."
+        else:
+            # General modification fallback
+            calculated_groundedness = 0.5
+            reasoning = "ℹ️ **Dynamic Rule Catch:** Output text modification detected. The mock engine adjusted the Groundedness index to a neutral baseline score."
+
+        # Display UI elements dynamically
         s_col1, s_col2 = st.columns(2)
         with s_col1:
-            if is_modified:
-                st.warning("🔄 Output modified by user! Recalculating scores based on default simulator heuristics...")
-                st.metric("Groundedness Score", "Custom Score Analyzed")
+            if calculated_groundedness >= groundedness_threshold:
+                st.success(f"🟢 Groundedness Score: {calculated_groundedness}")
             else:
-                if scenario["groundedness_score"] >= groundedness_threshold:
-                    st.success(f"🟢 Groundedness Score: {scenario['groundedness_score']}")
-                else:
-                    st.error(f"🔴 Groundedness Score: {scenario['groundedness_score']} (Hallucination Tracked)")
+                st.error(f"🔴 Groundedness Score: {calculated_groundedness} (Hallucination Tracked)")
         with s_col2:
             st.info(f"🔵 Relevancy Score: {scenario['relevancy_score']}")
             
-        st.markdown(f"**Automated Evaluation Logic Analysis:**\n\n> {scenario['groundedness_reason']}")
+        st.markdown(f"**Automated Evaluation Logic Analysis:**\n\n{reasoning}")
