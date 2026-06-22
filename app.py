@@ -4,7 +4,7 @@ import plotly.express as px
 import json
 
 # Set up page config
-st.set_page_config(page_title="AI Product Observability & Evals Framework", layout="wide")
+st.set_page_config(page_title="AI Product Quality Observability Framework", layout="wide")
 
 # Load pre-computed data
 with open("mock_data.json", "r") as f:
@@ -15,19 +15,41 @@ df_logs = pd.DataFrame(data["production_logs"])
 # App Header
 st.title("🔬 AI Product Quality Observability & Evals Framework")
 st.markdown("""
-**Target Audience:** Hiring Managers, Product Directors, & AI Engineers.  
-*This framework bridges the gap between engineering LLM performance (Evals) and business metrics (Product KPIs) using a simulated 'LLM-as-a-Judge' dataset.*
+Welcome to the interactive Product Operations portal. Use this framework to understand how engineering-level AI performance directly shifts business metrics.
 """)
 
 st.divider()
 
-# Sidebar Info
-st.sidebar.header("🎯 System Overview")
-st.sidebar.info("""
-**Core Stack Monitored:** * **Model:** Claude 3.5 Sonnet  
-* **Eval Engine:** DeepEval (Open-Source)  
-* **Use Case:** B2B AI Support Assistant
-""")
+# Sidebar Interactive Guidance Controls
+st.sidebar.header("🕹️ Simulation Controls")
+st.sidebar.markdown("### Step 1: Set Quality Alert Gates")
+groundedness_threshold = st.sidebar.slider("Minimum Groundedness Target (%)", 50, 100, 75, step=5) / 100.0
+latency_threshold = st.sidebar.slider("Max Acceptable Latency (Seconds)", 1.0, 6.0, 3.0, step=0.5)
+
+st.sidebar.divider()
+st.sidebar.markdown("### 💡 Active PM Playbook")
+pm_strategy = st.sidebar.selectbox(
+    "Select a Guide Scenario:",
+    ["1. Auditing a Hallucination Spike", "2. Optimizing API Unit Economics", "3. Guardrail Compliance Checklist"]
+)
+
+# Render explicit walkthrough guidance text based on PM strategy choice
+st.info(f"**Current Walkthrough Guide: {pm_strategy}**")
+if pm_strategy == "1. Auditing a Hallucination Spike":
+    st.markdown("""
+    👉 **How to use this view:** Look at the chart below. Notice the **Escalated to Human Support** events. 
+    Go to **Tab 2 (Production Log Inspector)** to find the exact interaction where Groundedness hit 0.0 to diagnose why the system hallucinated.
+    """)
+elif pm_strategy == "2. Optimizing API Unit Economics":
+    st.markdown("""
+    👉 **How to use this view:** Adjust the **Max Acceptable Latency** slider on the left. 
+    See how user drop-offs correlate with slower processing speeds. Use this data to negotiate SLA agreements with engineering.
+    """)
+else:
+    st.markdown("""
+    👉 **How to use this view:** Head directly over to **Tab 3 (Interactive Eval Sandbox)**. 
+    Test how automated rules stop data breaches and protect customer data automatically before a customer sees it.
+    """)
 
 # Setup Tabs
 tab1, tab2, tab3 = st.tabs(["📊 Executive ROI Dashboard", "🔍 Production Log Inspector", "🧪 Interactive Eval Sandbox"])
@@ -38,11 +60,11 @@ tab1, tab2, tab3 = st.tabs(["📊 Executive ROI Dashboard", "🔍 Production Log
 with tab1:
     st.header("Strategic Product Health")
     
-# High level KPI cards
+    # High level KPI cards
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         avg_grounded = df_logs["groundedness_score"].mean() * 100
-        st.metric("Avg Groundedness (Truth)", f"{avg_grounded:.1f}%", delta="-4.2% (vs last week)", delta_color="inverse")
+        st.metric("Avg Groundedness (Truth)", f"{avg_grounded:.1f}%")
     with col2:
         avg_rel = df_logs["relevancy_score"].mean() * 100
         st.metric("Avg Answer Relevancy", f"{avg_rel:.1f}%")
@@ -51,14 +73,17 @@ with tab1:
         st.metric("Avg User Latency", f"{avg_lat:.2f}s")
     with col4:
         escalation_rate = (df_logs["product_impact"] == "Escalated to Human Support").sum() / len(df_logs) * 100
-        st.metric("Support Escalation Rate", f"{escalation_rate:.1f}%", delta="+12.0% (Spike)", delta_color="inverse")
+        st.metric("Support Escalation Rate", f"{escalation_rate:.1f}%")
 
-    st.subheader("💡 The Product Management Link: Evals vs Business Outcomes")
-    st.markdown("""
-    > **Senior PM Insight:** Technical teams look at raw token counts. Product leaders care about business drag. 
-    > Notice how dropping Groundedness immediately triggers **Support Escalations**, ruining features' unit economics.
-    """)
+    st.subheader("📊 Operational Analytics Tracking")
     
+    # Dynamic Alert Banner based on Sidebar selections
+    flagged_logs = df_logs[(df_logs["groundedness_score"] < groundedness_threshold) | (df_logs["latency_sec"] > latency_threshold)]
+    if not flagged_logs.empty:
+        st.error(f"⚠️ **Product Ops Alert:** {len(flagged_logs)} production interactions have breached your custom quality alert thresholds!")
+    else:
+        st.success("✅ All system metrics are tracking cleanly within your product safety thresholds.")
+
     # Plotting Correlation
     fig = px.bar(df_logs, x="timestamp", y="latency_sec", color="product_impact",
                  title="System Latency vs Product Impact Event Mapping",
@@ -69,10 +94,10 @@ with tab1:
 # TAB 2: PRODUCTION LOG INSPECTOR
 # ----------------------------------------------------
 with tab2:
-    st.header("Granular Production Analysis")
-    st.write("Drill down into individual AI traces to evaluate the exact failure mechanics behind poor scores.")
+    st.header("Granular Production Trace Auditor")
+    st.markdown("Use this tab to audit exact user interactions that triggered system alerts.")
     
-    # Simple dataframe selector
+    # Filter dropdown based on user selections
     selected_row = st.selectbox("Select a production log to audit:", df_logs.index, 
                                  format_func=lambda x: f"[{df_logs.loc[x, 'product_impact']}] - Query: {df_logs.loc[x, 'user_query'][:40]}...")
     
@@ -80,12 +105,17 @@ with tab2:
     
     c1, c2 = st.columns(2)
     with c1:
-        st.info(f"**User Prompt:**\n{log['user_query']}")
-        st.success(f"**LLM Generated Response:**\n{log['llm_output']}")
+        st.info(f"**User Prompt:**\n\n{log['user_query']}")
+        st.success(f"**LLM Generated Response:**\n\n{log['llm_output']}")
     with c2:
-        st.warning(f"**Retrieved Context provided to LLM:**\n{log['retrieval_context']}")
+        st.warning(f"**Retrieved Context provided to LLM:**\n\n{log['retrieval_context']}")
         
     st.markdown("### 👁️ DeepEval Judge Verdict")
+    
+    # Highlight failures clearly
+    if log["groundedness_score"] < groundedness_threshold:
+        st.error(f"❌ Groundedness Score ({log['groundedness_score']}) dropped below your configured safety gate ({groundedness_threshold})!")
+    
     st.json({
         "Groundedness Score": log["groundedness_score"],
         "Relevancy Score": log["relevancy_score"],
@@ -96,29 +126,35 @@ with tab2:
 # TAB 3: INTERACTIVE EVAL SANDBOX
 # ----------------------------------------------------
 with tab3:
-    st.header("🧪 Automated Eval Sandbox Simulator")
-    st.markdown("Select an industry scenario below to see how an automated **LLM-as-a-Judge** framework catches product regression instantly without human review.")
+    st.header("🧪 Interactive Eval Sandbox Simulator")
+    st.markdown("Simulate an automated quality loop. Edit the text boxes below to see how changes to the source context alter the system's evaluation scores instantly.")
     
-    scenario_choice = st.selectbox("Choose a scenario context:", list(data["sandbox_scenarios"].keys()))
+    scenario_choice = st.radio("Choose a base scenario archetype to load:", list(data["sandbox_scenarios"].keys()))
     scenario = data["sandbox_scenarios"][scenario_choice]
     
     # Layout the editable fields
-    ctx_input = st.text_area("1. Context (Knowledge Base Base/Data source)", scenario["context"], height=80)
-    query_input = st.text_area("2. User Query", scenario["query"], height=70)
-    output_input = st.text_area("3. System Live AI Response", scenario["output"], height=70)
+    ctx_input = st.text_area("Step 1: Modify the Context (Knowledge Base reference rules)", scenario["context"], height=90)
+    query_input = st.text_area("Step 2: Enter the User Query", scenario["query"], height=70)
+    output_input = st.text_area("Step 3: Modify the AI Generated Output", scenario["output"], height=70)
     
-    if st.button("🚀 Execute Automated Evaluation Pipeline", type="primary"):
+    if st.button("🚀 Run Live Evaluation Mock Pipeline", type="primary"):
         st.divider()
-        st.subheader("📊 Evaluation Framework Evaluation Results")
+        st.subheader("🎯 Automated Evaluation Pipeline Results")
         
-        # Display scores cleanly
+        # Check if user changed the output text to simulate interactive overrides
+        is_modified = (output_input != scenario["output"])
+        
         s_col1, s_col2 = st.columns(2)
         with s_col1:
-            if scenario["groundedness_score"] >= 0.7:
-                st.success(f"🟢 Groundedness Score: {scenario['groundedness_score']}")
+            if is_modified:
+                st.warning("🔄 Output modified by user! Recalculating scores based on default simulator heuristics...")
+                st.metric("Groundedness Score", "Custom Score Analyzed")
             else:
-                st.error(f"🔴 Groundedness Score: {scenario['groundedness_score']} (Hallucination Detected!)")
+                if scenario["groundedness_score"] >= groundedness_threshold:
+                    st.success(f"🟢 Groundedness Score: {scenario['groundedness_score']}")
+                else:
+                    st.error(f"🔴 Groundedness Score: {scenario['groundedness_score']} (Hallucination Tracked)")
         with s_col2:
             st.info(f"🔵 Relevancy Score: {scenario['relevancy_score']}")
             
-        st.markdown(f"**Chain-of-Thought Judge Explanation:**\n> _{scenario['groundedness_reason']}_")
+        st.markdown(f"**Automated Evaluation Logic Analysis:**\n\n> {scenario['groundedness_reason']}")
