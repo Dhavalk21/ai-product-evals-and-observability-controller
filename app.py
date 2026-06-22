@@ -48,7 +48,7 @@ with tab1:
         st.metric("Avg Answer Relevancy", f"{avg_rel:.1f}%")
     with col3:
         avg_lat = df_logs["latency_sec"].mean()
-        st.metric("Avg User Latency", f"{avg_lat:.2fs}")
+st.metric("Avg User Latency", f"{avg_lat:.2f}s")
     with col4:
         escalation_rate = (df_logs["product_impact"] == "Escalated to Human Support").sum() / len(df_logs) * 100
         st.metric("Support Escalation Rate", f"{escalation_rate:.1f}%", delta="+12.0% (Spike)", delta_color="inverse")
