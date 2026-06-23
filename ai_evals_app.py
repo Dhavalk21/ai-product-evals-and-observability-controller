@@ -114,6 +114,14 @@ st.markdown("""
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
     margin-bottom: 24px;
   }
+
+  /* High Specificity Rule: Prevent Streamlit Dark Theme/Global styles from making light metric card text white */
+  div.stApp .metric-label-black {
+    color: #000000 !important;
+  }
+  div.stApp .metric-value-black {
+    color: #000000 !important;
+  }
 </style>
 """, unsafe_allow_html=True)
 
@@ -408,14 +416,14 @@ projected_csat = 1.0 + (quality_score / 100.0) * 4.0
 
 # Right Analytics Workspace Panel
 with col_right:
-    # 3 High-Impact KPI Cards (Task 4: Card Headers are Black)
+    # 3 High-Impact KPI Cards (Task 4: Card Headers and Metric Values are explicitly targeted in CSS for Black coloring)
     kpi_col1, kpi_col2, kpi_col3 = st.columns(3)
     
     with kpi_col1:
         st.markdown(f"""
         <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #2563eb; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
-            <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000 !important; tracking-wider">Overall Quality Index</span>
-            <span style="display: block; font-size: 28px; font-weight: 800; color: #000000 !important; margin-top: 4px;">{quality_score:.1f}%</span>
+            <span class="metric-label-black" style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000 !important; tracking-wider">Overall Quality Index</span>
+            <span class="metric-value-black" style="display: block; font-size: 28px; font-weight: 800; color: #000000 !important; margin-top: 4px;">{quality_score:.1f}%</span>
             <span style="display: block; font-size: 11px; color: {'#10b981' if quality_score >= 80 else '#ef4444'}; font-weight: 700; margin-top: 8px;">
                 {'● Acceptable' if quality_score >= 80 else '▲ Unsafe Baseline'}
             </span>
@@ -435,8 +443,8 @@ with col_right:
 
         st.markdown(f"""
         <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #1e293b; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
-            <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000 !important; tracking-wider">Predicted Churn Risk</span>
-            <span style="display: block; font-size: 28px; font-weight: 800; color: #000000 !important; margin-top: 4px;">{churn_risk:.1f}%</span>
+            <span class="metric-label-black" style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000 !important; tracking-wider">Predicted Churn Risk</span>
+            <span class="metric-value-black" style="display: block; font-size: 28px; font-weight: 800; color: #000000 !important; margin-top: 4px;">{churn_risk:.1f}%</span>
             <span style="display: block; font-size: 11px; color: {churn_color}; font-weight: 700; margin-top: 8px;">
                 {churn_delta}
             </span>
