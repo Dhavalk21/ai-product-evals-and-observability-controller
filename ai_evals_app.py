@@ -15,13 +15,18 @@ st.set_page_config(
 # Custom CSS Injection to guarantee exact compliance with all Tasks
 st.markdown("""
 <style>
+  /* GLOBAL STREAMLIT THEME ACCENT OVERRIDE */
+  /* Forces Streamlit's native React components (like sliders) to use our blue theme instead of red */
+  html, body, [data-testid="stAppViewContainer"], .stApp {
+    --primary-color: #2563eb !important;
+  }
 
-/* Color of the interactive slider handle (thumb) */
-div[data-baseweb="slider"] [role="slider"] {
-  background-color: #2563eb !important;
-  border: 2px solid #ffffff !important;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2) !important;
-}
+  /* Color of the interactive slider handle (thumb) */
+  div[data-baseweb="slider"] [role="slider"] {
+    background-color: #2563eb !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2) !important;
+  }
 
   /* Task 5: Spacing - Add more padding on left and right side (around 3% more than default) */
   div[class*="stAppViewBlockContainer"] {
@@ -167,45 +172,6 @@ div[data-baseweb="slider"] [role="slider"] {
     display: block !important;
   }
 </style>
-
-<script>
-(function() {
-  const replaceColors = () => {
-    // Only inspect nested divs inside specific Streamlit slider components to optimize execution
-    const sliders = document.querySelectorAll('div[data-testid="stSlider"]');
-    sliders.forEach(slider => {
-      const tracks = slider.querySelectorAll('div[data-baseweb="slider"] div');
-      tracks.forEach(el => {
-        if (el.style && el.style.background) {
-          const bg = el.style.background;
-          // Standardize parsing to capture inline dynamic linear-gradient colors
-          const match = bg.match(/(rgba?\\(.*?\\)|#[a-fA-F0-9]+)\\s+0%/);
-          if (match) {
-            const activeColor = match[1];
-            // Only execute replacement if the active color is not our brand royal blue to block recursion loops
-            if (activeColor !== 'rgb(37, 99, 235)' && activeColor !== '#2563eb') {
-              const updatedBg = bg.replaceAll(activeColor, 'rgb(37, 99, 235)');
-              if (el.style.background !== updatedBg) {
-                el.style.background = updatedBg;
-              }
-            }
-          }
-        }
-      });
-    });
-  };
-
-  // Safe MutationObserver lifecycle: disconnects, mutates, and then reconnects to avoid recursion crashes
-  const observer = new MutationObserver((mutations) => {
-    observer.disconnect();
-    replaceColors();
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
-  });
-
-  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
-  replaceColors();
-})();
-</script>
 """, unsafe_allow_html=True)
 
 # Initialize Session States for Playground Presets & Expander Toggles
