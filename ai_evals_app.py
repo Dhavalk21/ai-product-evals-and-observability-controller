@@ -155,7 +155,7 @@ with col_title:
             <span style="background-color: #ffffff; color: #475569; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
                 AI Product Operations • Quality Assurance Framework
             </span>
-            <span style="background-color: #f5f3ff; color: #4f46e5; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #ddd6fe; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px;">
+            <div style="background-color: #f5f3ff; color: #4f46e5; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #ddd6fe; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px;">
                 <span>Designed by Dhaval Kareliya</span>
                 <span style="color: #cbd5e1;">|</span>
                 <a href="https://www.linkedin.com/in/dhavalk21/" target="_blank" style="text-decoration: none; color: #4f46e5; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
