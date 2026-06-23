@@ -611,36 +611,14 @@ DECISION ROADMAP:
 
 # Premium Minimalist Footer Panel
 st.markdown("""
-<div style="
-    border-top: 1px solid #e2e8f0;
-    margin-top: 48px;
-    padding-top: 24px;
-    padding-bottom: 24px;
-">
-    <div style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 12px;
-        color: #64748b;
-        width: 100%;
-    ">
+<div style="border-top: 1px solid #e2e8f0; margin-top: 48px; padding-top: 24px; padding-bottom: 24px;">
+    <div style="max-w-[1600px] mx-auto flex flex-col sm:flex-row justify-between align-items: right; gap: 12px; font-size: 12px; color: #64748b;">
         <div>
             &copy; 2026 Dhaval Kareliya. All rights reserved.
         </div>
-
         <div style="display: flex; gap: 24px; font-weight: 600;">
-            <a href="https://www.linkedin.com/in/dhavalk21/"
-               target="_blank"
-               style="text-decoration: none; color: #475569;">
-                LinkedIn
-            </a>
-
-            <a href="https://github.com/dhavalk21/"
-               target="_blank"
-               style="text-decoration: none; color: #475569;">
-                GitHub
-            </a>
+            <a href="https://www.linkedin.com/in/dhavalk21/" target="_blank" style="text-decoration: none; color: #475569; transition: color 0.2s;">LinkedIn</a>
+            <a href="https://github.com/dhavalk21/" target="_blank" style="text-decoration: none; color: #475569; transition: color 0.2s;">GitHub</a>
         </div>
     </div>
 </div>
