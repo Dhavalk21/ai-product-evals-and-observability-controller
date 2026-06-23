@@ -213,46 +213,45 @@ with col_actions:
             st.rerun()
 
 # Collapsible Guide (Task 4: Heading is Black)
+# Note: Indentation has been stripped cleanly so that Streamlit parses it as HTML, not a code block.
 if st.session_state.show_guide:
-    st.markdown(textwrap.dedent("""
-    <div style="background-color: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
-        <h3 style="color: #000000 !important; font-size: 16px; font-weight: 700; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
-            <svg style="width: 20px; height: 20px; color: #2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-            Show Guide: How to Run LLM Quality Evaluations (With Examples)
-        </h3>
-        <p style="color: #475569; font-size: 13px; margin-bottom: 16px;">
-            Product managers run these evaluations (Evals) using golden datasets to avoid deploying a model that outputs false facts or fails user queries.
-        </p>
-        <div style="background-color: #eff6ff; padding: 16px; border-radius: 8px; border: 1px solid #bfdbfe; color: #1e3a8a; margin-bottom: 16px; font-size: 13px; font-weight: 500;">
-            <p style="font-weight: 700; color: #1e40af; margin-bottom: 4px;">Step-by-Step Instructions:</p>
-            <ol style="margin-left: 20px; list-style-type: decimal;">
-                <li>Click on either <strong>Test Case 1</strong> or <strong>Test Case 2</strong> buttons inside the top right header menu to load sample data.</li>
-                <li>Inspect the source context (what the database knows) and compare it with the LLM response.</li>
-                <li>Click the blue **"Run AI-Judge Evaluation Simulation"** button. The simulated judge reads, checks, and scores the inputs.</li>
-                <li>Look at the top KPI cards—the evaluation results instantly update your **Predicted Churn Risk** and **Expected CSAT**!</li>
-            </ol>
-        </div>
-        
-        <!-- Re-added 3 Scenario Cards inside the Guide section -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 16px;">
-            <div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
-                <p style="font-weight: 700; color: #000000 !important; font-size: 13px; margin: 0 0 4px 0;">Scenario A: Hallucinated Fact</p>
-                <p style="font-size: 11px; color: #475569; margin: 0 0 8px 0; line-height: 1.5;">The model promised a '10-day return policy' when the source context states 'no refund policy'.</p>
-                <p style="font-size: 11px; font-weight: 700; color: #b45309; margin: 0;">Expected: Faithfulness ~10%, Hallucination Rate ~70%</p>
-            </div>
-            <div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
-                <p style="font-weight: 700; color: #000000 !important; font-size: 13px; margin: 0 0 4px 0;">Scenario B: Off-Topic Answer</p>
-                <p style="font-size: 11px; color: #475569; margin: 0 0 8px 0; line-height: 1.5;">The model ignored the pricing question and began advertising shoe deals instead.</p>
-                <p style="font-size: 11px; font-weight: 700; color: #b91c1c; margin: 0;">Expected: Relevancy ~30%, CSAT decreases severely.</p>
-            </div>
-            <div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
-                <p style="font-weight: 700; color: #000000 !important; font-size: 13px; margin: 0 0 4px 0;">Scenario C: Perfect Grounding</p>
-                <p style="font-size: 11px; color: #475569; margin: 0 0 8px 0; line-height: 1.5;">The model correctly extracted details and complied strictly with the strict refund policy context.</p>
-                <p style="font-size: 11px; font-weight: 700; color: #047857; margin: 0;">Expected: Quality >95%, Churn Risk minimized.</p>
-            </div>
-        </div>
-    </div>
-    """), unsafe_allow_html=True)
+    st.markdown("""
+<div style="background-color: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
+<h3 style="color: #000000 !important; font-size: 16px; font-weight: 700; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+<svg style="width: 20px; height: 20px; color: #2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+Show Guide: How to Run LLM Quality Evaluations (With Examples)
+</h3>
+<p style="color: #475569; font-size: 13px; margin-bottom: 16px;">
+Product managers run these evaluations (Evals) using golden datasets to avoid deploying a model that outputs false facts or fails user queries.
+</p>
+<div style="background-color: #eff6ff; padding: 16px; border-radius: 8px; border: 1px solid #bfdbfe; color: #1e3a8a; margin-bottom: 16px; font-size: 13px; font-weight: 500;">
+<p style="font-weight: 700; color: #1e40af; margin-bottom: 4px;">Step-by-Step Instructions:</p>
+<ol style="margin-left: 20px; list-style-type: decimal;">
+<li>Click on either <strong>Test Case 1</strong> or <strong>Test Case 2</strong> buttons inside the top right header menu to load sample data.</li>
+<li>Inspect the source context (what the database knows) and compare it with the LLM response.</li>
+<li>Click the blue **"Run AI-Judge Evaluation Simulation"** button. The simulated judge reads, checks, and scores the inputs.</li>
+<li>Look at the top KPI cards—the evaluation results instantly update your **Predicted Churn Risk** and **Expected CSAT**!</li>
+</ol>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 16px;">
+<div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+<p style="font-weight: 700; color: #000000 !important; font-size: 13px; margin: 0 0 4px 0;">Scenario A: Hallucinated Fact</p>
+<p style="font-size: 11px; color: #475569; margin: 0 0 8px 0; line-height: 1.5;">The model promised a '10-day return policy' when the source context states 'no refund policy'.</p>
+<p style="font-size: 11px; font-weight: 700; color: #b45309; margin: 0;">Expected: Faithfulness ~10%, Hallucination Rate ~70%</p>
+</div>
+<div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+<p style="font-weight: 700; color: #000000 !important; font-size: 13px; margin: 0 0 4px 0;">Scenario B: Off-Topic Answer</p>
+<p style="font-size: 11px; color: #475569; margin: 0 0 8px 0; line-height: 1.5;">The model ignored the pricing question and began advertising shoe deals instead.</p>
+<p style="font-size: 11px; font-weight: 700; color: #b91c1c; margin: 0;">Expected: Relevancy ~30%, CSAT decreases severely.</p>
+</div>
+<div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+<p style="font-weight: 700; color: #000000 !important; font-size: 13px; margin: 0 0 4px 0;">Scenario C: Perfect Grounding</p>
+<p style="font-size: 11px; color: #475569; margin: 0 0 8px 0; line-height: 1.5;">The model correctly extracted details and complied strictly with the strict refund policy context.</p>
+<p style="font-size: 11px; font-weight: 700; color: #047857; margin: 0;">Expected: Quality >95%, Churn Risk minimized.</p>
+</div>
+</div>
+</div>
+""", unsafe_allow_html=True)
 
 # Main Content Columns (Task 5: 36% Left, 6% Spacer, 58% Right split layout)
 col_left, col_spacer, col_right = st.columns([36, 6, 58])
@@ -577,7 +576,7 @@ DECISION ROADMAP:
     elif quality_score < 70.0 or slide_hallucination > 15:
         memo += f"- **Recommendation: BLOCK DEPLOYMENT (REGRESSION DETECTED).** High hallucination rates ({slide_hallucination}%) pose critical branding and user churn liabilities. Prompt optimizations are required to ground output vectors."
     else:
-        memo += f"- **Recommendation: CONDITIONAL ROLLOUT (MONITOR CLOSELY).** System performance is borderline acceptable. Latency and grounding indicators should be watched with an automated anomaly triage workflow."
+        memo += f"- **Recommendation: CONDITIONAL ROLLOUT (MONITOR CLOSELY).** System performance is borderline acceptable. Layout and grounding indicators should be watched with an automated anomaly triage workflow."
 
     st.code(memo, language="markdown")
 
