@@ -471,7 +471,7 @@ with col_right:
         <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #2563eb; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
             <span class="metric-label-black" style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000 !important; tracking-wider">Overall Quality Index</span>
             <span class="metric-value-black" style="display: block; font-size: 28px; font-weight: 800; color: #000000 !important; margin-top: 4px;">{quality_score:.1f}%</span>
-            <span style="display: block; font-size: 11px; color: {'#10b981' if quality_score >= 80 else '#ef4444'}; font-weight: 700; margin-top: 8px;">
+            <span style="display: block; font-size: 15px; color: {'#10b981' if quality_score >= 80 else '#ef4444'}; font-weight: 700; margin-top: 8px;">
                 {'● Acceptable' if quality_score >= 80 else '▲ Unsafe Baseline'}
             </span>
         </div>
