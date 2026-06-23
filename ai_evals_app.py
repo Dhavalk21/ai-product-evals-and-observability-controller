@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS Injection to guarantee exact compliance with Tasks 1, 2, 3, 4, and 5
+# Custom CSS Injection to guarantee exact compliance with all Tasks
 st.markdown("""
 <style>
   /* Task 5: Spacing - Add more padding on left and right side (around 3% more than default) */
@@ -52,33 +52,44 @@ st.markdown("""
     background-color: #2563eb !important;
   }
 
-  /* Tasks 1 & 2: Inactive/Secondary Buttons (White background, solid black border, black font) */
+  /* Task 1 & 2: Inactive/Secondary Buttons (White background, solid black border, black font) */
+  div.stButton > button[kind="secondary"],
   button[data-testid="baseButton-secondary"] {
-    border: 1px solid #000000 !important;
+    border: 2px solid #000000 !important;
     color: #000000 !important;
     background-color: #ffffff !important;
     border-radius: 8px !important;
     font-weight: 700 !important;
     transition: all 0.2s ease !important;
   }
+  div.stButton > button[kind="secondary"]:hover,
   button[data-testid="baseButton-secondary"]:hover {
     background-color: #f1f5f9 !important;
     color: #000000 !important;
     border-color: #000000 !important;
   }
 
-  /* Tasks 2 & 3: Active/Primary Buttons (Blue background, white font) */
+  /* Task 2 & 3: Active/Primary Buttons (Blue background, white font) */
+  div.stButton > button[kind="primary"],
   button[data-testid="baseButton-primary"] {
     background-color: #2563eb !important;
     color: #ffffff !important;
-    border: 1px solid #2563eb !important;
+    border: 2px solid #2563eb !important;
     border-radius: 8px !important;
     font-weight: 700 !important;
     transition: all 0.2s ease !important;
   }
+  div.stButton > button[kind="primary"]:hover,
   button[data-testid="baseButton-primary"]:hover {
     background-color: #1d4ed8 !important;
     color: #ffffff !important;
+    border-color: #1d4ed8 !important;
+  }
+
+  /* Task 4: Force All Headers & Specified Text Blocks to Solid Black */
+  h1, h2, h3, h4, h5, h6 {
+    color: #000000 !important;
+    font-weight: 800 !important;
   }
 
   /* Task 4: Expander header is solid black font */
@@ -192,7 +203,7 @@ with col_actions:
 if st.session_state.show_guide:
     st.markdown("""
     <div style="background-color: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
-        <h3 style="color: #000000; font-size: 16px; font-weight: 700; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+        <h3 style="color: #000000 !important; font-size: 16px; font-weight: 700; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
             <svg style="width: 20px; height: 20px; color: #2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
             Show Guide: How to Run LLM Quality Evaluations (With Examples)
         </h3>
@@ -204,8 +215,8 @@ if st.session_state.show_guide:
             <ol style="margin-left: 20px; list-style-type: decimal;">
                 <li>Click on either <strong>Test Case 1</strong> or <strong>Test Case 2</strong> buttons inside the top right header menu to load sample data.</li>
                 <li>Inspect the source context (what the database knows) and compare it with the LLM response.</li>
-                <li>Click the blue <strong>"Run AI-Judge Evaluation Simulation"</strong> button. The simulated judge reads, checks, and scores the inputs.</li>
-                <li>Look at the top KPI cards—the evaluation results instantly update your <strong>Predicted Churn Risk</strong> and <strong>Expected CSAT</strong>!</li>
+                <li>Click the blue **"Run AI-Judge Evaluation Simulation"** button. The simulated judge reads, checks, and scores the inputs.</li>
+                <li>Look at the top KPI cards—the evaluation results instantly update your **Predicted Churn Risk** and **Expected CSAT**!</li>
             </ol>
         </div>
     </div>
@@ -343,7 +354,7 @@ with col_left:
     st.markdown("---")
 
     # Section 1: Sliders Calibration (Task 4: Title is Black)
-    st.markdown("<h3 style='color: #000000; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem;'>1. System Metric Calibration</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #000000 !important; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem;'>1. System Metric Calibration</h3>", unsafe_allow_html=True)
     
     slide_faithfulness = st.slider(
         "Faithfulness (Ragas) (%)",
@@ -365,7 +376,7 @@ with col_left:
     )
 
     # Section 2: Weight Configuration (Task 4: Title is Black)
-    st.markdown("<h3 style='color: #000000; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem; margin-top: 1rem;'>2. KPI Weight Configuration</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #000000 !important; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem; margin-top: 1rem;'>2. KPI Weight Configuration</h3>", unsafe_allow_html=True)
     weight_faith = st.slider(
         "Faithfulness Impact Weight",
         min_value=0, max_value=100, step=5, value=40,
@@ -408,7 +419,7 @@ with col_right:
     with kpi_col1:
         st.markdown(f"""
         <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #2563eb; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
-            <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000; tracking-wider">Overall Quality Index</span>
+            <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000 !important; tracking-wider">Overall Quality Index</span>
             <span style="display: block; font-size: 28px; font-weight: 800; color: #0f172a; margin-top: 4px;">{quality_score:.1f}%</span>
             <span style="display: block; font-size: 11px; color: {'#10b981' if quality_score >= 80 else '#ef4444'}; font-weight: 700; margin-top: 8px;">
                 {'● Acceptable' if quality_score >= 80 else '▲ Unsafe Baseline'}
@@ -429,7 +440,7 @@ with col_right:
 
         st.markdown(f"""
         <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #1e293b; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
-            <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000; tracking-wider">Predicted Churn Risk</span>
+            <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000 !important; tracking-wider">Predicted Churn Risk</span>
             <span style="display: block; font-size: 28px; font-weight: 800; color: #0f172a; margin-top: 4px;">{churn_risk:.1f}%</span>
             <span style="display: block; font-size: 11px; color: {churn_color}; font-weight: 700; margin-top: 8px;">
                 {churn_delta}
@@ -451,7 +462,7 @@ with col_right:
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Plotly Timeline Chart (Task 4: Title & Axes/Legend are Black)
-    st.markdown("<h3 style='color: #000000; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem;'>Quality Baseline Timeline</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #000000 !important; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem;'>Quality Baseline Timeline</h3>", unsafe_allow_html=True)
     baseline_runs = [55.0, 58.5, 62.0, 71.5, 76.0]
     runs = baseline_runs + [quality_score]
     x_runs = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5", "Active"]
@@ -509,7 +520,7 @@ with col_right:
     """, unsafe_allow_html=True)
 
     # Automated release briefing memo (Task 4: Title is Black)
-    st.markdown("<h3 style='color: #000000; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem;'>System Quality Release Briefing</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #000000 !important; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem;'>System Quality Release Briefing</h3>", unsafe_allow_html=True)
     memo = f"""### 💼 PRODUCT OPERATIONS & LLM EVALUATION BRIEF
 Generated: {datetime.now().strftime('%B %d, %Y')}
 Author: Dhaval Kareliya | AI Product Management Operations
