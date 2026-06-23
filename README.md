@@ -4,7 +4,7 @@ A high-fidelity dashboard engineered for AI Product Operations and Quality Assur
 
 ### 🔗 Live Link: [View Interactive App Here](https://ai-evals-and-observability-controller.streamlit.app/)
 
-## 🚀 Four Steps of Validating Pipeline
+## 🚀 App Lifecycle Details
 
 The application provides an interactive workspace split into a continuous validation pipeline:
 
@@ -93,3 +93,9 @@ graph TD
     style ChurnRisk fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#7f1d1d
     style MemoReport fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d
 ```
+
+## 👨‍💻 Author & Contact
+Designed and engineered with precision by **Dhaval Kareliya**.
+
+* 💼 **LinkedIn:** [Dhaval Kareliya](https://www.linkedin.com/in/dhavalk21/)
+* 🐙 **GitHub Profile:** [Dhaval Kareliya](https://github.com/dhavalk21/)
