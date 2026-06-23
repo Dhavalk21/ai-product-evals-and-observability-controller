@@ -55,7 +55,7 @@ st.markdown("""
     border-radius: 12px !important;
   }
   div[data-testid="stExpander"] div[role="button"] p {
-    color: #1e40af !important; /* Premium deep blue */
+    color: #000000 !important; /* Solid black title */
     font-weight: 700 !important;
     font-size: 15px !important;
   }
@@ -81,11 +81,11 @@ st.markdown("""
     background-color: #2563eb !important;
   }
 
-  /* Premium Interactive Blue Buttons */
+  /* Premium Interactive Blue Buttons (Primary Active) */
   button[data-testid="baseButton-primary"] {
     background-color: #2563eb !important;
     color: white !important;
-    border: none !important;
+    border: 1px solid #2563eb !important;
     border-radius: 8px !important;
     font-weight: 700 !important;
   }
@@ -94,16 +94,17 @@ st.markdown("""
     color: white !important;
   }
   
-  /* Secondary Active/Inactive outlines */
+  /* Secondary Active/Inactive outlines (Black/White styling) */
   button[data-testid="baseButton-secondary"] {
-    border: 1px solid #bfdbfe !important;
-    color: #1e40af !important;
-    background-color: #eff6ff !important;
+    border: 1px solid #000000 !important;
+    color: #000000 !important;
+    background-color: #ffffff !important;
     border-radius: 8px !important;
+    font-weight: 600 !important;
   }
   button[data-testid="baseButton-secondary"]:hover {
-    background-color: #dbeafe !important;
-    color: #1e40af !important;
+    background-color: #f1f5f9 !important;
+    color: #000000 !important;
   }
 </style>
 """, unsafe_allow_html=True)
@@ -342,8 +343,8 @@ with col_left:
 
     st.markdown("---")
 
-    # Section 1: Sliders Calibration (Clean Light Label Styling)
-    st.subheader("1. System Metric Calibration")
+    # Section 1: Sliders Calibration (Explicit HTML override to pure black)
+    st.markdown("<h3 style='color: #000000; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.5rem;'>1. System Metric Calibration</h3>", unsafe_allow_html=True)
     
     slide_faithfulness = st.slider(
         "Faithfulness (Ragas) (%)",
@@ -364,7 +365,7 @@ with col_left:
         help="Detects completely fabricated details contradicting context facts. 💡 Ideal Target: < 5%"
     )
 
-    st.subheader("2. KPI Weight Configuration")
+    st.markdown("<h3 style='color: #000000; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.5rem; margin-top: 1rem;'>2. KPI Weight Configuration</h3>", unsafe_allow_html=True)
     weight_faith = st.slider(
         "Faithfulness Impact Weight",
         min_value=0, max_value=100, step=5, value=40,
@@ -407,7 +408,7 @@ with col_right:
     with kpi_col1:
         st.markdown(f"""
         <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #2563eb; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
-            <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #64748b; tracking-wider">Overall Quality Index</span>
+            <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000; tracking-wider">Overall Quality Index</span>
             <span style="display: block; font-size: 28px; font-weight: 800; color: #0f172a; margin-top: 4px;">{quality_score:.1f}%</span>
             <span style="display: block; font-size: 11px; color: {'#10b981' if quality_score >= 80 else '#ef4444'}; font-weight: 700; margin-top: 8px;">
                 {'● Acceptable' if quality_score >= 80 else '▲ Unsafe Baseline'}
@@ -429,7 +430,7 @@ with col_right:
 
         st.markdown(f"""
         <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #1e293b; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
-            <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #64748b; tracking-wider">Predicted Churn Risk</span>
+            <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #000000; tracking-wider">Predicted Churn Risk</span>
             <span style="display: block; font-size: 28px; font-weight: 800; color: #0f172a; margin-top: 4px;">{churn_risk:.1f}%</span>
             <span style="display: block; font-size: 11px; color: {churn_color}; font-weight: 700; margin-top: 8px;">
                 {churn_delta}
@@ -452,7 +453,7 @@ with col_right:
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Plotly Timeline Chart (Enhanced styling matching the pareto container)
-    st.subheader("Quality Baseline Timeline")
+    st.markdown("<h3 style='color: #000000; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.5rem;'>Quality Baseline Timeline</h3>", unsafe_allow_html=True)
     baseline_runs = [55.0, 58.5, 62.0, 71.5, 76.0]
     runs = baseline_runs + [quality_score]
     x_runs = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5", "Active"]
@@ -479,7 +480,9 @@ with col_right:
         height=220,
         paper_bgcolor="white",
         plot_bgcolor="white",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(color="black")),
+        xaxis=dict(tickfont=dict(color="black")),
+        yaxis=dict(tickfont=dict(color="black"))
     )
     
     # Render inside a clean card container to match screenshot layout
@@ -511,7 +514,7 @@ with col_right:
     """, unsafe_allow_html=True)
 
     # Automated release briefing memo (Premium dark terminal container layout for contrast & style)
-    st.subheader("System Quality Release Briefing")
+    st.markdown("<h3 style='color: #000000; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.5rem;'>System Quality Release Briefing</h3>", unsafe_allow_html=True)
     memo = f"""### 💼 PRODUCT OPERATIONS & LLM EVALUATION BRIEF
 Generated: {datetime.now().strftime('%B %d, %Y')}
 Author: Dhaval Kareliya | AI Product Management Operations
