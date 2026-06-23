@@ -171,28 +171,38 @@ div[data-baseweb="slider"] [role="slider"] {
 <script>
 (function() {
   const replaceColors = () => {
-    // Find all sub-div elements inside the slider track components
-    const elements = document.querySelectorAll('div[data-baseweb="slider"] div');
-    elements.forEach(el => {
-      if (el.style && el.style.background) {
-        const bg = el.style.background;
-        // Parse the dynamic linear-gradient to identify the active track color (always mapped next to 0%)
-        const match = bg.match(/(rgba?\(.*?\\))\\s+0%/);
-        if (match) {
-          const activeColor = match[1];
-          // Intercept and replace the track color with our premium royal blue theme
-          if (activeColor !== 'rgb(37, 99, 235)' && activeColor !== '#2563eb') {
-            el.style.background = bg.replaceAll(activeColor, 'rgb(37, 99, 235)');
+    // Only inspect nested divs inside specific Streamlit slider components to optimize execution
+    const sliders = document.querySelectorAll('div[data-testid="stSlider"]');
+    sliders.forEach(slider => {
+      const tracks = slider.querySelectorAll('div[data-baseweb="slider"] div');
+      tracks.forEach(el => {
+        if (el.style && el.style.background) {
+          const bg = el.style.background;
+          // Standardize parsing to capture inline dynamic linear-gradient colors
+          const match = bg.match(/(rgba?\\(.*?\\)|#[a-fA-F0-9]+)\\s+0%/);
+          if (match) {
+            const activeColor = match[1];
+            // Only execute replacement if the active color is not our brand royal blue to block recursion loops
+            if (activeColor !== 'rgb(37, 99, 235)' && activeColor !== '#2563eb') {
+              const updatedBg = bg.replaceAll(activeColor, 'rgb(37, 99, 235)');
+              if (el.style.background !== updatedBg) {
+                el.style.background = updatedBg;
+              }
+            }
           }
         }
-      }
+      });
     });
   };
 
-  // Run on first load and set up a MutationObserver to listen for Streamlit rendering runs
-  const observer = new MutationObserver(replaceColors);
+  // Safe MutationObserver lifecycle: disconnects, mutates, and then reconnects to avoid recursion crashes
+  const observer = new MutationObserver((mutations) => {
+    observer.disconnect();
+    replaceColors();
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+  });
+
   observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
-  
   replaceColors();
 })();
 </script>
