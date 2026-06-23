@@ -157,7 +157,9 @@ with col_title:
             </span>
     <div style="display: flex; justify-content: center; width: 100%; padding: 20px 0;">
     
-    <div style="background-color: #f5f3ff; color: #4f46e5; font-size: 11px; font-weight: 600; padding: 4px 16px; border-radius: 9999px; border: 1px solid #ddd6fe; white-space: nowrap; display: flex; align-items: center; gap: 12px;">
+<div style="display: block; margin-bottom: 16px;">
+
+    <div style="background-color: #f5f3ff; color: #4f46e5; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #ddd6fe; white-space: nowrap; display: inline-flex; align-items: center; gap: 12px;">
         <span>Designed by Dhaval Kareliya</span>
         <span style="color: #cbd5e1;">|</span>
         <a href="https://www.linkedin.com/in/dhavalk21/" target="_blank" style="text-decoration: none; color: #4f46e5; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
