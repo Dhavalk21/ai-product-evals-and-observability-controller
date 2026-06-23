@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import re
+import textwrap
 import plotly.graph_objects as go
 from datetime import datetime
 
@@ -14,6 +15,19 @@ st.set_page_config(
 # Custom CSS Injection to guarantee exact compliance with all Tasks
 st.markdown("""
 <style>
+  /* GLOBAL STREAMLIT THEME ACCENT OVERRIDE */
+  /* Forces Streamlit's native React components (like sliders) to use our blue theme instead of red */
+  html, body, [data-testid="stAppViewContainer"], .stApp {
+    --primary-color: #2563eb !important;
+  }
+
+  /* Color of the interactive slider handle (thumb) */
+  div[data-baseweb="slider"] [role="slider"] {
+    background-color: #2563eb !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2) !important;
+  }
+
   /* Task 5: Spacing - Add more padding on left and right side (around 3% more than default) */
   div[class*="stAppViewBlockContainer"] {
     padding-left: 6% !important;
@@ -48,7 +62,8 @@ st.markdown("""
   }
 
   /* Task 1 & 2: Inactive/Secondary Buttons (White background, solid black border, black font) */
-  div.stButton > button[kind="secondary"],
+  div.stApp div.stButton button[data-testid="stBaseButton-secondary"],
+  div.stApp div.stButton button[kind="secondary"],
   button[data-testid="baseButton-secondary"] {
     border: 2px solid #000000 !important;
     color: #000000 !important;
@@ -57,7 +72,14 @@ st.markdown("""
     font-weight: 700 !important;
     transition: all 0.2s ease !important;
   }
-  div.stButton > button[kind="secondary"]:hover,
+  
+  /* Guarantee inner text wrapper inside secondary buttons stays black */
+  div.stApp div.stButton button[data-testid="stBaseButton-secondary"] p,
+  div.stApp div.stButton button[data-testid="stBaseButton-secondary"] span {
+    color: #000000 !important;
+  }
+
+  div.stApp div.stButton button[data-testid="stBaseButton-secondary"]:hover,
   button[data-testid="baseButton-secondary"]:hover {
     background-color: #f1f5f9 !important;
     color: #000000 !important;
@@ -65,7 +87,8 @@ st.markdown("""
   }
 
   /* Task 2 & 3: Active/Primary Buttons (Blue background, white font) */
-  div.stButton > button[kind="primary"],
+  div.stApp div.stButton button[data-testid="stBaseButton-primary"],
+  div.stApp div.stButton button[kind="primary"],
   button[data-testid="baseButton-primary"] {
     background-color: #2563eb !important;
     color: #ffffff !important;
@@ -74,7 +97,14 @@ st.markdown("""
     font-weight: 700 !important;
     transition: all 0.2s ease !important;
   }
-  div.stButton > button[kind="primary"]:hover,
+
+  /* Guarantee inner text wrapper inside primary buttons stays white */
+  div.stApp div.stButton button[data-testid="stBaseButton-primary"] p,
+  div.stApp div.stButton button[data-testid="stBaseButton-primary"] span {
+    color: #ffffff !important;
+  }
+
+  div.stApp div.stButton button[data-testid="stBaseButton-primary"]:hover,
   button[data-testid="baseButton-primary"]:hover {
     background-color: #1d4ed8 !important;
     color: #ffffff !important;
@@ -115,12 +145,31 @@ st.markdown("""
     margin-bottom: 24px;
   }
 
-  /* High Specificity Rule: Prevent Streamlit Dark Theme/Global styles from making light metric card text white */
-  div.stApp .metric-label-black {
+  /* High Specificity Rule: Force black color to stay black in both Light and Dark mode themes */
+  div.stApp span.metric-label-black {
     color: #000000 !important;
   }
-  div.stApp .metric-value-black {
+  div.stApp span.metric-value-black {
     color: #000000 !important;
+  }
+
+  /* High Specificity Overrides for Scenario Cards within the Guide Panel */
+  div.stApp .scenario-title {
+    color: #000000 !important;
+    font-weight: 800 !important;
+    font-size: 15px !important;
+    display: block !important;
+  }
+  div.stApp .scenario-text {
+    color: #000000 !important; /* Force to solid black for high contrast */
+    font-size: 11.50px !important; /* Increased by 2% for improved accessibility */
+    line-height: 1.5 !important;
+  }
+  div.stApp .scenario-expected {
+    color: #000000 !important; /* Force to solid black for high contrast */
+    font-weight: 700 !important;
+    font-size: 11.50px !important; /* Increased by 2% for improved accessibility */
+    display: block !important;
   }
 </style>
 """, unsafe_allow_html=True)
@@ -151,30 +200,29 @@ col_title, col_actions = st.columns([6, 4])
 with col_title:
     st.markdown("""
     <div style="background-color: transparent; padding: 12px 12px 12px 0px; border-radius: 12px; margin-bottom: 8px;">
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 16px;">
-            <span style="background-color: #ffffff; color: #475569; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); white-space: nowrap;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px;">
+            <span style="background-color: #ffffff; color: #475569; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); display: inline-flex; align-items: center;">
                 AI Product Operations • Quality Assurance Framework
             </span>
-            <div style="background-color: #f5f3ff; color: #4f46e5; font-size: 11px; font-weight: 600; padding: 4px 16px; border-radius: 9999px; border: 1px solid #ddd6fe; white-space: nowrap; display: inline-flex; align-items: center; gap: 12px;">
+            <span style="background-color: #f5f3ff; color: #4f46e5; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #ddd6fe; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
                 <span>Designed by Dhaval Kareliya</span>
                 <span style="color: #cbd5e1;">|</span>
-                <a href="https://www.linkedin.com/in/dhavalk21/" target="_blank" style="text-decoration: none; color: #4f46e5; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
+                <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" style="text-decoration: none; color: #4f46e5; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
                     <svg style="width: 12px; height: 12px;" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                     LinkedIn
                 </a>
                 <span style="color: #cbd5e1;">|</span>
-                <a href="https://github.com/dhavalk21/" target="_blank" style="text-decoration: none; color: #4f46e5; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
+                <a href="https://github.com/YOUR_USERNAME" target="_blank" style="text-decoration: none; color: #4f46e5; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
                     <svg style="width: 12px; height: 12px;" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                     GitHub
                 </a>
             </div>
-        </div>
-        <h1 style="color: #000000; font-size: 28px; font-weight: 800; margin: 0 0 4px 0; letter-spacing: -0.025em;">
-            Production AI Evals &amp; Observability Controller
-        </h1>
-        <p style="color: #475569; font-size: 14.5px; margin: 0; line-height: 1.5; font-weight: 500;">
-            Verify, monitor, and establish reliable release gates for LLM system performance. Define multidimensional criteria to proactively predict user retention and satisfaction.
-        </p>
+            <h1 style="color: #000000; font-size: 28px; font-weight: 800; margin: 0 0 4px 0; letter-spacing: -0.025em;">
+                Production AI Evals &amp; Observability Controller
+            </h1>
+            <p style="color: #475569; font-size: 14.5px; margin: 0; line-height: 1.5; font-weight: 500;">
+                Verify, monitor, and establish reliable release gates for LLM system performance. Define multidimensional criteria to proactively predict user retention and satisfaction.
+            </p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -213,27 +261,45 @@ with col_actions:
             st.rerun()
 
 # Collapsible Guide (Task 4: Heading is Black)
+# Note: Indentation has been stripped cleanly so that Streamlit parses it as HTML, not a code block.
 if st.session_state.show_guide:
     st.markdown("""
-    <div style="background-color: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
-        <h3 style="color: #000000 !important; font-size: 16px; font-weight: 700; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
-            <svg style="width: 20px; height: 20px; color: #2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-            Show Guide: How to Run LLM Quality Evaluations (With Examples)
-        </h3>
-        <p style="color: #475569; font-size: 13px; margin-bottom: 16px;">
-            Product managers run these evaluations (Evals) using golden datasets to avoid deploying a model that outputs false facts or fails user queries.
-        </p>
-        <div style="background-color: #eff6ff; padding: 16px; border-radius: 8px; border: 1px solid #bfdbfe; color: #1e3a8a; margin-bottom: 16px; font-size: 13px; font-weight: 500;">
-            <p style="font-weight: 700; color: #1e40af; margin-bottom: 4px;">Step-by-Step Instructions:</p>
-            <ol style="margin-left: 20px; list-style-type: decimal;">
-                <li>Click on either <strong>Test Case 1</strong> or <strong>Test Case 2</strong> buttons inside the top right header menu to load sample data.</li>
-                <li>Inspect the source context (what the database knows) and compare it with the LLM response.</li>
-                <li>Click the blue **"Run AI-Judge Evaluation Simulation"** button. The simulated judge reads, checks, and scores the inputs.</li>
-                <li>Look at the top KPI cards—the evaluation results instantly update your **Predicted Churn Risk** and **Expected CSAT**!</li>
-            </ol>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+<div style="background-color: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
+<h3 style="color: #000000 !important; font-size: 16px; font-weight: 700; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+<svg style="width: 20px; height: 20px; color: #2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+Show Guide: How to Run LLM Quality Evaluations (With Examples)
+</h3>
+<p style="color: #475569; font-size: 13px; margin-bottom: 16px;">
+Product managers run these evaluations (Evals) using golden datasets to avoid deploying a model that outputs false facts or fails user queries.
+</p>
+<div style="background-color: #eff6ff; padding: 16px; border-radius: 8px; border: 1px solid #bfdbfe; color: #1e3a8a; margin-bottom: 16px; font-size: 13px; font-weight: 500;">
+<p style="font-weight: 700; color: #1e40af; margin-bottom: 4px;">Step-by-Step Instructions:</p>
+<ol style="margin-left: 20px; list-style-type: decimal;">
+<li>Click on either <strong>Test Case 1</strong> or <strong>Test Case 2</strong> buttons inside the top right header menu to load sample data.</li>
+<li>Inspect the source context (what the database knows) and compare it with the LLM response.</li>
+<li>Click the blue **"Run AI-Judge Evaluation Simulation"** button. The simulated judge reads, checks, and scores the inputs.</li>
+<li>Look at the top KPI cards—the evaluation results instantly update your **Predicted Churn Risk** and **Expected CSAT**!</li>
+</ol>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 16px;">
+<div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+<p class="scenario-title" style="font-weight: 800 !important; color: #000000 !important; font-size: 15px !important; margin: 0 0 4px 0; display: block !important;">Scenario A: Hallucinated Fact</p>
+<p class="scenario-text" style="font-size: 11.50px !important; color: #000000 !important; margin: 0 0 8px 0; line-height: 1.5;">The model promised a '10-day return policy' when the source context states 'no refund policy'.</p>
+<p class="scenario-expected" style="font-size: 11.50px !important; font-weight: 700 !important; color: #000000 !important; margin: 0;">Expected: Faithfulness ~10%, Hallucination Rate ~70%</p>
+</div>
+<div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+<p class="scenario-title" style="font-weight: 800 !important; color: #000000 !important; font-size: 15px !important; margin: 0 0 4px 0; display: block !important;">Scenario B: Off-Topic Answer</p>
+<p class="scenario-text" style="font-size: 11.50px !important; color: #000000 !important; margin: 0 0 8px 0; line-height: 1.5;">The model ignored the pricing question and began advertising shoe deals instead.</p>
+<p class="scenario-expected" style="font-size: 11.50px !important; font-weight: 700 !important; color: #000000 !important; margin: 0;">Expected: Relevancy ~30%, CSAT decreases severely.</p>
+</div>
+<div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+<p class="scenario-title" style="font-weight: 800 !important; color: #000000 !important; font-size: 15px !important; margin: 0 0 4px 0; display: block !important;">Scenario C: Perfect Grounding</p>
+<p class="scenario-text" style="font-size: 11.50px !important; color: #000000 !important; margin: 0 0 8px 0; line-height: 1.5;">The model correctly extracted details and complied strictly with the strict refund policy context.</p>
+<p class="scenario-expected" style="font-size: 11.50px !important; font-weight: 700 !important; color: #000000 !important; margin: 0;">Expected: Quality >95%, Churn Risk minimized.</p>
+</div>
+</div>
+</div>
+""", unsafe_allow_html=True)
 
 # Main Content Columns (Task 5: 36% Left, 6% Spacer, 58% Right split layout)
 col_left, col_spacer, col_right = st.columns([36, 6, 58])
@@ -558,7 +624,7 @@ DECISION ROADMAP:
     elif quality_score < 70.0 or slide_hallucination > 15:
         memo += f"- **Recommendation: BLOCK DEPLOYMENT (REGRESSION DETECTED).** High hallucination rates ({slide_hallucination}%) pose critical branding and user churn liabilities. Prompt optimizations are required to ground output vectors."
     else:
-        memo += f"- **Recommendation: CONDITIONAL ROLLOUT (MONITOR CLOSELY).** System performance is borderline acceptable. Latency and grounding indicators should be watched with an automated anomaly triage workflow."
+        memo += f"- **Recommendation: CONDITIONAL ROLLOUT (MONITOR CLOSELY).** System performance is borderline acceptable. Layout and grounding indicators should be watched with an automated anomaly triage workflow."
 
     st.code(memo, language="markdown")
 
@@ -570,8 +636,8 @@ st.markdown("""
             &copy; 2026 Dhaval Kareliya. All rights reserved.
         </div>
         <div style="display: flex; gap: 24px; font-weight: 600;">
-            <a href="https://www.linkedin.com/in/dhavalk21/" target="_blank" style="text-decoration: none; color: #475569; transition: color 0.2s;">LinkedIn</a>
-            <a href="https://github.com/dhavalk21/" target="_blank" style="text-decoration: none; color: #475569; transition: color 0.2s;">GitHub</a>
+            <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" style="text-decoration: none; color: #475569; transition: color 0.2s;">LinkedIn</a>
+            <a href="https://github.com/YOUR_USERNAME" target="_blank" style="text-decoration: none; color: #475569; transition: color 0.2s;">GitHub</a>
         </div>
     </div>
 </div>
