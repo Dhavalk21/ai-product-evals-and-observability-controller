@@ -32,17 +32,17 @@ if 'play_context' not in st.session_state:
 if 'play_query' not in st.session_state:
     st.session_state.play_query = "What is the cost of the silver plan, and what is your refund policy?"
 if 'play_output' not in st.session_state:
-    st.session_state.play_output = "Silver plan cost 10 euro and 10 day return policy"
+    st.session_state.play_output = "Silver plan cost 10 euro and no refund policy"
 if 'active_preset' not in st.session_state:
-    st.session_state.active_preset = "hallucinated"
+    st.session_state.active_preset = "grounded"
 
 # Default Baseline Sliders
 if 'faithfulness' not in st.session_state:
-    st.session_state.faithfulness = 80
+    st.session_state.faithfulness = 100
 if 'relevancy' not in st.session_state:
-    st.session_state.relevancy = 85
+    st.session_state.relevancy = 100
 if 'hallucination' not in st.session_state:
-    st.session_state.hallucination = 12
+    st.session_state.hallucination = 0
 
 # Header Branding & Badges
 st.markdown("""
@@ -80,11 +80,11 @@ with st.expander("📖 Show Guide: How to Run LLM Quality Evaluations (With Exam
     
     g_col1, g_col2, g_col3 = st.columns(3)
     with g_col1:
-        st.info("**Scenario A: Hallucinated Fact**\nThe model promised a '10-day return policy' when the source context states 'no refund policy'.\n\n*Expected: Faithfulness ~60%, Hallucinations ~45%*")
+        st.info("**Scenario A: Hallucinated Fact**\nThe model promised a '10-day return policy' when the source context states 'no refund policy'.\n\n*Expected Evaluation: Low Faithfulness (~60%), High Hallucination Rate (~45%)*")
     with g_col2:
-        st.warning("**Scenario B: Off-Topic Answer**\nThe model ignored the pricing question and began advertising shoe deals instead.\n\n*Expected: Relevancy ~30%, CSAT decreases severely.*")
+        st.warning("**Scenario B: Off-Topic Answer**\nThe model ignored the pricing question and began advertising shoe deals instead.\n\n*Expected Evaluation: Relevancy ~30%, CSAT decreases severely.*")
     with g_col3:
-        st.success("**Scenario C: Perfect Grounding**\nThe model correctly extracted details and complied strictly with the strict refund policy context.\n\n*Expected: Quality >90%, Churn Risk minimized.*")
+        st.success("**Scenario C: Perfect Grounding**\nThe model correctly extracted details and complied strictly with the strict refund policy context.\n\n*Expected Evaluation: Quality >90%, Churn Risk minimized.*")
 
 # Main Content Columns (Layout proportion: 38.3% Left, 61.7% Right)
 col_left, col_right = st.columns([38, 62])
@@ -140,51 +140,77 @@ with col_left:
         
         # Standardized search keywords list
         policy_keywords = ['day', 'days', 'week', 'weeks', 'month', 'months', 'year', 'years', 'return', 'refund', 'policy', 'guarantee']
-        
-        # Heuristics A: Numerical validation & structural mismatch
-        output_numbers = re.findall(r'\b\d+\b', o)
-        for num in output_numbers:
-            output_idx = o.find(num)
-            if output_idx != -1:
-                snippet = o[max(0, output_idx - 25): min(len(o), output_idx + 25)]
-                is_output_temporal = any(w in snippet for w in policy_keywords)
-                
-                context_idx = c.find(num)
-                if context_idx != -1:
-                    c_snippet = c[max(0, context_idx - 25): min(len(c), context_idx + 25)]
-                    is_context_temporal = any(w in c_snippet for w in policy_keywords)
-                    
-                    if is_output_temporal and not is_context_temporal:
-                        evaluated_faithfulness -= 40
-                        evaluated_hallucination += 45
-                else:
-                    evaluated_faithfulness -= 30
-                    evaluated_hallucination += 30
+        currency_keywords = ['euro', 'euros', 'eur', 'usd', 'dollar', 'dollars', 'credits', 'price', 'cost']
+        negation_keywords = ['no', 'not', 'never', 'non', 'cannot', 'without']
 
-        # Heuristics B: Strict Policy Contradiction mapping
-        if "no refund" in c or "no return" in c:
-            has_refund_claim = any(word in o for word in policy_keywords) and not any(w in o for w in ['no refund', 'no return'])
-            if has_refund_claim:
-                evaluated_faithfulness -= 45
-                evaluated_hallucination += 40
-
-        # Heuristics C: Relevancy validation
-        clean_q = re.sub(r'[^\w\s]', '', q)
-        clean_o = re.sub(r'[^\w\s]', '', o)
-        query_words = [w for w in clean_q.split() if len(w) > 3]
-        match_count = sum(1 for w in query_words if w in clean_o)
-        
-        if query_words:
-            overlap_ratio = match_count / len(query_words)
-            evaluated_relevancy = int(30 + (overlap_ratio * 70))
+        # Safeguard against completely empty or trash inputs
+        if len(c) < 5 or len(o) < 5 or len(q) < 5:
+            st.session_state.faithfulness = 10
+            st.session_state.relevancy = 10
+            st.session_state.hallucination = 80
+            st.warning("Inputs are too short or empty! Evaluating default fallback low-quality scores.")
         else:
-            evaluated_relevancy = 50
+            # Heuristics A: Numerical validation & structural unit mismatch
+            output_numbers = re.findall(r'\b\d+\b', o)
+            for num in output_numbers:
+                output_idx = o.find(num)
+                if output_idx != -1:
+                    snippet = o[max(0, output_idx - 25): min(len(o), output_idx + 25)]
+                    is_output_temporal = any(w in snippet for w in policy_keywords)
+                    is_output_currency = any(w in snippet for w in currency_keywords)
+                    
+                    context_idx = c.find(num)
+                    if context_idx != -1:
+                        c_snippet = c[max(0, context_idx - 25): min(len(c), context_idx + 25)]
+                        is_context_temporal = any(w in c_snippet for w in policy_keywords)
+                        is_context_currency = any(w in c_snippet for w in currency_keywords)
+                        
+                        # Target dimension mismatch (e.g. context linked 10 to euros, output linked 10 to days)
+                        if is_output_temporal and not is_context_temporal:
+                            evaluated_faithfulness -= 40
+                            evaluated_hallucination += 45
+                        elif is_output_currency and not is_context_currency:
+                            evaluated_faithfulness -= 30
+                            evaluated_hallucination += 35
+                    else:
+                        # Number is completely fabricated (doesn't exist in source context)
+                        evaluated_faithfulness -= 45
+                        evaluated_hallucination += 50
 
-        # Sync scores directly back to sliders
-        st.session_state.faithfulness = min(100, max(10, evaluated_faithfulness))
-        st.session_state.relevancy = min(100, max(10, evaluated_relevancy))
-        st.session_state.hallucination = min(80, max(0, evaluated_hallucination))
-        st.toast("Evaluation metrics updated successfully!", icon="✅")
+            # Heuristics B: Strict Policy Contradiction & Negation mapping
+            has_context_negation = any(neg in c for neg in ['no refund', 'no return', 'non-refundable', 'not refundable'])
+            if has_context_negation:
+                # Look for refund/return mention in output
+                has_output_refund_words = any(word in o for word in ['refund', 'return', 'reimbursement', 'money-back'])
+                if has_output_refund_words:
+                    # Verify if the output correctly negates this refund promise
+                    output_snippet_has_negation = any(neg in o for neg in negation_keywords)
+                    if not output_snippet_has_negation:
+                        # Outright contradiction! The LLM offered a refund option when forbidden.
+                        evaluated_faithfulness -= 45
+                        evaluated_hallucination += 40
+
+            # Heuristics C: Relevancy validation with conversational Stop-Word Filter
+            clean_q = re.sub(r'[^\w\s]', '', q)
+            clean_o = re.sub(r'[^\w\s]', '', o)
+            
+            # Filter out grammatical helper particles to avoid penalizing direct/concise answers
+            stop_words = {'what', 'is', 'the', 'of', 'and', 'a', 'to', 'in', 'your', 'my', 'does', 'do', 'how', 'much', 'for', 'are', 'an', 'you'}
+            
+            query_words = [w for w in clean_q.split() if len(w) > 3 and w not in stop_words]
+            match_count = sum(1 for w in query_words if w in clean_o)
+            
+            if query_words:
+                overlap_ratio = match_count / len(query_words)
+                evaluated_relevancy = int(30 + (overlap_ratio * 70))
+            else:
+                evaluated_relevancy = 50
+
+            # Sync scores directly back to sliders (bounded safely)
+            st.session_state.faithfulness = min(100, max(10, evaluated_faithfulness))
+            st.session_state.relevancy = min(100, max(10, evaluated_relevancy))
+            st.session_state.hallucination = min(80, max(0, evaluated_hallucination))
+            st.toast("Evaluation metrics updated successfully!", icon="✅")
 
     st.markdown("---")
 
@@ -229,9 +255,12 @@ with col_left:
 
 # Mathematical Engine calculation processes
 total_weight = weight_faith + weight_rel + weight_hall
-f_factor = (weight_faith / total_weight) if total_weight > 0 else 0
-r_factor = (weight_rel / total_weight) if total_weight > 0 else 0
-h_factor = (weight_hall / total_weight) if total_weight > 0 else 0
+if total_weight == 0:
+    total_weight = 1  # Prevent ZeroDivisionError
+
+f_factor = (weight_faith / total_weight)
+r_factor = (weight_rel / total_weight)
+h_factor = (weight_hall / total_weight)
 
 quality_score = (slide_faithfulness * f_factor) + (slide_relevancy * r_factor) + ((100 - slide_hallucination) * h_factor)
 
@@ -254,11 +283,22 @@ with col_right:
             delta_color="normal" if quality_score >= 80 else "inverse"
         )
     with kpi_col2:
+        # Dynamic Multi-Tier Churn Severity Thresholds
+        if churn_risk <= 20.0:
+            churn_delta = "Low Risk"
+            delta_color_val = "normal"
+        elif churn_risk <= 45.0:
+            churn_delta = "Medium Risk"
+            delta_color_val = "off"
+        else:
+            churn_delta = "High Churn Alert"
+            delta_color_val = "inverse"
+
         st.metric(
             label="Predicted Churn Risk",
             value=f"{churn_risk:.1f}%",
-            delta="Low Risk" if churn_risk <= 15 else "High Churn Alert",
-            delta_color="inverse" if churn_risk > 15 else "normal"
+            delta=churn_delta,
+            delta_color=delta_color_val
         )
     with kpi_col3:
         st.metric(
