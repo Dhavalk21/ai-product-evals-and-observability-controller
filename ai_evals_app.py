@@ -11,10 +11,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Premium CSS Injection for professional light-blue branding & contrast fixes
+# Custom CSS Injection to guarantee exact compliance with Tasks 1, 2, 3, 4, and 5
 st.markdown("""
 <style>
-  /* Page Padding Spacing Expansion */
+  /* Task 5: Spacing - Add more padding on left and right side (around 3% more than default) */
   div[class*="stAppViewBlockContainer"] {
     padding-left: 6% !important;
     padding-right: 6% !important;
@@ -22,54 +22,25 @@ st.markdown("""
     background-color: #f8fafc;
   }
 
-  /* Global background overrides for Streamlit container elements */
   .stApp {
     background-color: #f8fafc;
   }
 
-  /* Custom White Card Wrappers */
-  .custom-card {
-    background-color: #ffffff !important;
-    padding: 24px;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-    margin-bottom: 24px;
-  }
-
   /* Force highly legible text colors on all native Streamlit widgets */
   div[data-testid="stTextArea"] textarea, div[data-testid="stTextInput"] input {
-    color: #0f172a !important;
+    color: #000000 !important;
     background-color: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
   }
   div[data-testid="stTextArea"] label p, div[data-testid="stTextInput"] label p {
-    color: #0f172a !important;
-    font-weight: 600 !important;
-  }
-  
-  /* Expander Styling & Visibility Contrast Fix */
-  div[data-testid="stExpander"] {
-    background-color: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 12px !important;
-  }
-  div[data-testid="stExpander"] div[role="button"] p {
-    color: #000000 !important; /* Solid black title */
+    color: #000000 !important;
     font-weight: 700 !important;
-    font-size: 15px !important;
-  }
-  div[data-testid="stExpander"] div[data-testid="stExpanderDetails"] {
-    color: #1e293b !important;
-    background-color: #ffffff !important;
-    border-radius: 8px;
-    padding: 16px;
   }
 
-  /* Force Slider Label and Value Legibility */
+  /* Slider Value & Label Legibility - Task 4 (Solid Black) */
   div[data-testid="stSlider"] label p {
-    color: #1e293b !important;
-    font-weight: 600 !important;
+    color: #000000 !important;
+    font-weight: 700 !important;
   }
   div[data-testid="stSlider"] div[data-testid="stWidgetValue"] {
     color: #2563eb !important;
@@ -81,37 +52,68 @@ st.markdown("""
     background-color: #2563eb !important;
   }
 
-  /* Premium Interactive Blue Buttons (Primary Active) */
-  button[data-testid="baseButton-primary"] {
-    background-color: #2563eb !important;
-    color: white !important;
-    border: 1px solid #2563eb !important;
-    border-radius: 8px !important;
-    font-weight: 700 !important;
-  }
-  button[data-testid="baseButton-primary"]:hover {
-    background-color: #1d4ed8 !important;
-    color: white !important;
-  }
-  
-  /* Secondary Active/Inactive outlines (Black/White styling) */
+  /* Tasks 1 & 2: Inactive/Secondary Buttons (White background, solid black border, black font) */
   button[data-testid="baseButton-secondary"] {
     border: 1px solid #000000 !important;
     color: #000000 !important;
     background-color: #ffffff !important;
     border-radius: 8px !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
+    transition: all 0.2s ease !important;
   }
   button[data-testid="baseButton-secondary"]:hover {
     background-color: #f1f5f9 !important;
     color: #000000 !important;
+    border-color: #000000 !important;
+  }
+
+  /* Tasks 2 & 3: Active/Primary Buttons (Blue background, white font) */
+  button[data-testid="baseButton-primary"] {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    border: 1px solid #2563eb !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    transition: all 0.2s ease !important;
+  }
+  button[data-testid="baseButton-primary"]:hover {
+    background-color: #1d4ed8 !important;
+    color: #ffffff !important;
+  }
+
+  /* Task 4: Expander header is solid black font */
+  div[data-testid="stExpander"] div[role="button"] p {
+    color: #000000 !important; 
+    font-weight: 700 !important;
+    font-size: 15px !important;
+  }
+  div[data-testid="stExpander"] {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+  }
+  div[data-testid="stExpander"] div[data-testid="stExpanderDetails"] {
+    color: #1e293b !important;
+    background-color: #ffffff !important;
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  /* Custom White Card Wrappers */
+  .custom-card {
+    background-color: #ffffff !important;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
   }
 </style>
 """, unsafe_allow_html=True)
 
 # Initialize Session States for Playground Presets & Expander Toggles
 if 'show_guide' not in st.session_state:
-    st.session_state.show_guide = True  # Default open for onboarding, toggleable via header button
+    st.session_state.show_guide = True
 if 'play_context' not in st.session_state:
     st.session_state.play_context = "The school science lab allows students to reserve a microscope workstation for 45 minutes. Safety goggles must be worn at all times, and there is no reservation fee."
 if 'play_query' not in st.session_state:
@@ -129,7 +131,7 @@ if 'relevancy' not in st.session_state:
 if 'hallucination' not in st.session_state:
     st.session_state.hallucination = 70
 
-# Widescreen Executive Header Panel (Col proportion: Title vs Actions Menu)
+# Widescreen Executive Header Panel (Proportional split: Title vs Actions Menu)
 col_title, col_actions = st.columns([6, 4])
 
 with col_title:
@@ -143,7 +145,7 @@ with col_title:
                 Designed by Dhaval Kareliya
             </span>
         </div>
-        <h1 style="color: #0f172a; font-size: 28px; font-weight: 800; margin: 0 0 4px 0; letter-spacing: -0.025em;">
+        <h1 style="color: #000000; font-size: 28px; font-weight: 800; margin: 0 0 4px 0; letter-spacing: -0.025em;">
             Production AI Evals &amp; Observability Controller
         </h1>
         <p style="color: #475569; font-size: 14.5px; margin: 0; line-height: 1.5; font-weight: 500;">
@@ -157,12 +159,14 @@ with col_actions:
     act_col1, act_col2, act_col3 = st.columns(3)
     
     with act_col1:
-        if st.button("Show Guide", use_container_width=True, key="hdr_show_guide"):
+        # Task 1: "Show Guide" uses White/Black styled secondary button
+        if st.button("Show Guide", use_container_width=True, key="hdr_show_guide", type="secondary"):
             st.session_state.show_guide = not st.session_state.show_guide
             st.rerun()
             
     with act_col2:
-        if st.button("Test Case 1", use_container_width=True, key="hdr_tc1", help="Loads a perfect grounded response example"):
+        # Task 1: "Test Case 1" uses White/Black styled secondary button
+        if st.button("Test Case 1", use_container_width=True, key="hdr_tc1", type="secondary", help="Loads a perfect grounded response example"):
             st.session_state.play_context = "The school science lab allows students to reserve a microscope workstation for 45 minutes. Safety goggles must be worn at all times, and there is no reservation fee."
             st.session_state.play_query = "How long can I reserve a microscope workstation, and is there any fee?"
             st.session_state.play_output = "You can reserve a workstation for 45 minutes, and there is no reservation fee."
@@ -173,7 +177,8 @@ with col_actions:
             st.rerun()
             
     with act_col3:
-        if st.button("Test Case 2", use_container_width=True, key="hdr_tc2", help="Loads a hallucinated fact response example"):
+        # Task 1: "Test Case 2" uses White/Black styled secondary button
+        if st.button("Test Case 2", use_container_width=True, key="hdr_tc2", type="secondary", help="Loads a hallucinated fact response example"):
             st.session_state.play_context = "The school science lab allows students to reserve a microscope workstation for 45 minutes. Safety goggles must be worn at all times, and there is no reservation fee."
             st.session_state.play_query = "How long can I reserve a workstation, and is there a reservation fee?"
             st.session_state.play_output = "You can reserve a workstation for 10 minutes and there is a 5 dollar booking fee."
@@ -183,33 +188,34 @@ with col_actions:
             st.session_state.hallucination = 70
             st.rerun()
 
-# Collapsible Guide (Toggled by st.session_state.show_guide)
-guide_expanded = st.session_state.show_guide
-with st.expander("Show Guide: How to Run LLM Quality Evaluations (With Examples)", expanded=guide_expanded):
+# Collapsible Guide (Task 4: Heading is Black)
+if st.session_state.show_guide:
     st.markdown("""
-    Product managers run these evaluations (Evals) using golden datasets to avoid deploying a model that outputs false facts or fails user queries.
-    
-    #### 📋 Step-by-Step Instructions:
-    1. Click on either **Test Case 1** or **Test Case 2** buttons inside the top right header menu to load sample data.
-    2. Inspect the source context (what the database knows) and compare it with the LLM response.
-    3. Click the blue **"Run AI-Judge Evaluation Simulation"** button. The simulated judge reads, checks, and scores the inputs.
-    4. Look at the top KPI cards—the evaluation results instantly update your **Predicted Churn Risk** and **Expected CSAT**!
-    """)
-    
-    g_col1, g_col2, g_col3 = st.columns(3)
-    with g_col1:
-        st.info("**Scenario A: Hallucinated Fact**\nThe model promised a '10-day return policy' when the source context states 'no refund policy'.\n\n*Expected Evaluation: Low Faithfulness (~10%), High Hallucination Rate (~70%)*")
-    with g_col2:
-        st.warning("**Scenario B: Off-Topic Answer**\nThe model ignored the pricing question and began advertising shoe deals instead.\n\n*Expected Evaluation: Relevancy ~30%, CSAT decreases severely.*")
-    with g_col3:
-        st.success("**Scenario C: Perfect Grounding**\nThe model correctly extracted details and complied strictly with the strict refund policy context.\n\n*Expected Evaluation: Quality >95%, Churn Risk minimized.*")
+    <div style="background-color: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
+        <h3 style="color: #000000; font-size: 16px; font-weight: 700; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+            <svg style="width: 20px; height: 20px; color: #2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            Show Guide: How to Run LLM Quality Evaluations (With Examples)
+        </h3>
+        <p style="color: #475569; font-size: 13px; margin-bottom: 16px;">
+            Product managers run these evaluations (Evals) using golden datasets to avoid deploying a model that outputs false facts or fails user queries.
+        </p>
+        <div style="background-color: #eff6ff; padding: 16px; border-radius: 8px; border: 1px solid #bfdbfe; color: #1e3a8a; margin-bottom: 16px; font-size: 13px; font-weight: 500;">
+            <p style="font-weight: 700; color: #1e40af; margin-bottom: 4px;">Step-by-Step Instructions:</p>
+            <ol style="margin-left: 20px; list-style-type: decimal;">
+                <li>Click on either <strong>Test Case 1</strong> or <strong>Test Case 2</strong> buttons inside the top right header menu to load sample data.</li>
+                <li>Inspect the source context (what the database knows) and compare it with the LLM response.</li>
+                <li>Click the blue <strong>"Run AI-Judge Evaluation Simulation"</strong> button. The simulated judge reads, checks, and scores the inputs.</li>
+                <li>Look at the top KPI cards—the evaluation results instantly update your <strong>Predicted Churn Risk</strong> and <strong>Expected CSAT</strong>!</li>
+            </ol>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-# Main Content Columns (Layout proportion with explicit spacer column for elegant separation)
+# Main Content Columns (Task 5: 36% Left, 6% Spacer, 58% Right split layout)
 col_left, col_spacer, col_right = st.columns([36, 6, 58])
 
 with col_left:
-    
-    # Premium Light Blue Playground Card Header (Color matched to keep light theme cohesive)
+    # Live Evaluation Playground Banner
     st.markdown("""
     <div style="background-color: #eff6ff; padding: 20px; border-radius: 12px; border: 1px solid #bfdbfe; color: #1e3a8a; margin-bottom: 20px;">
         <h3 style="color: #1e40af; font-size: 16px; font-weight: 700; margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
@@ -222,7 +228,8 @@ with col_left:
     </div>
     """, unsafe_allow_html=True)
     
-    # Presets Selection buttons
+    # Task 2: Active blue preset selector buttons vs. inactive white/black outline buttons
+    st.markdown("<p style='font-size:12px; font-weight:600; color:#000000;'>Choose a Scenario:</p>", unsafe_allow_html=True)
     p_col1, p_col2, p_col3 = st.columns(3)
     
     # Helper to load presets
@@ -241,23 +248,25 @@ with col_left:
             st.session_state.play_output = "The silver plan costs 10 euro and has no refund policy."
         st.session_state.active_preset = preset_key
 
-    # Active dynamic coloring for button presets
     with p_col1:
         if st.button("⚠️ Hallucinated", type="primary" if st.session_state.active_preset == "hallucinated" else "secondary", use_container_width=True):
             load_preset("hallucinated")
+            st.rerun()
     with p_col2:
         if st.button("❌ Off-Topic", type="primary" if st.session_state.active_preset == "offtopic" else "secondary", use_container_width=True):
             load_preset("offtopic")
+            st.rerun()
     with p_col3:
         if st.button("✅ Grounded", type="primary" if st.session_state.active_preset == "grounded" else "secondary", use_container_width=True):
             load_preset("grounded")
+            st.rerun()
 
-    # Playground Inputs (Explicit white containers)
+    # Playground Inputs
     text_context = st.text_area("Grounded Source Context", value=st.session_state.play_context, height=90)
     text_query = st.text_input("User Question", value=st.session_state.play_query)
     text_output = st.text_area("Generated Output Response", value=st.session_state.play_output, height=90)
 
-    # Simulation Evaluation Trigger (Premium Royal Blue Button)
+    # Task 3: Simulation Evaluation Trigger (The Blue Button)
     if st.button("Run AI-Judge Evaluation Simulation", type="primary", use_container_width=True):
         c = text_context.lower().strip()
         q = text_query.lower().strip()
@@ -294,7 +303,6 @@ with col_left:
                         is_context_temporal = any(w in c_snippet for w in policy_keywords)
                         is_context_currency = any(w in c_snippet for w in currency_keywords)
                         
-                        # Target dimension mismatch (e.g. context linked 10 to euros, output linked 10 to days)
                         if is_output_temporal and not is_context_temporal:
                             evaluated_faithfulness -= 40
                             evaluated_hallucination += 45
@@ -302,28 +310,19 @@ with col_left:
                             evaluated_faithfulness -= 30
                             evaluated_hallucination += 35
                     else:
-                        # Number is completely fabricated (doesn't exist in source context)
                         evaluated_faithfulness -= 45
                         evaluated_hallucination += 50
 
-            # Heuristics B: Strict Policy Contradiction & Negation mapping
-            has_context_negation = any(neg in c for neg in ['no refund', 'no return', 'non-refundable', 'not refundable'])
-            if has_context_negation:
-                # Look for refund/return mention in output
-                has_output_refund_words = any(word in o for word in ['refund', 'return', 'reimbursement', 'money-back'])
-                if has_output_refund_words:
-                    # Verify if the output correctly negates this refund promise
-                    output_snippet_has_negation = any(neg in o for neg in negation_keywords)
-                    if not output_snippet_has_negation:
-                        # Outright contradiction! The LLM offered a refund option when forbidden.
-                        evaluated_faithfulness -= 45
-                        evaluated_hallucination += 40
+            # Heuristics B: Strict Policy Contradiction mapping
+            if "no refund" in c or "no return" in c:
+                has_refund_claim = any(word in o for word in policy_keywords) and not any(w in o for w in ['no refund', 'no return'])
+                if has_refund_claim:
+                    evaluated_faithfulness -= 45
+                    evaluated_hallucination += 40
 
-            # Heuristics C: Relevancy validation with conversational Stop-Word Filter
+            # Heuristics C: Relevancy validation
             clean_q = re.sub(r'[^\w\s]', '', q)
             clean_o = re.sub(r'[^\w\s]', '', o)
-            
-            # Filter out grammatical helper particles to avoid penalizing direct/concise answers
             stop_words = {'what', 'is', 'the', 'of', 'and', 'a', 'to', 'in', 'your', 'my', 'does', 'do', 'how', 'much', 'for', 'are', 'an', 'you'}
             
             query_words = [w for w in clean_q.split() if len(w) > 3 and w not in stop_words]
@@ -335,16 +334,16 @@ with col_left:
             else:
                 evaluated_relevancy = 50
 
-            # Sync scores directly back to sliders (bounded safely)
-            st.session_state.faithfulness = min(100, max(10, evaluated_faithfulness))
-            st.session_state.relevancy = min(100, max(10, evaluated_relevancy))
-            st.session_state.hallucination = min(80, max(0, evaluated_hallucination))
-            st.toast("Evaluation metrics updated successfully!", icon="✅")
+        # Sync scores directly back to sliders
+        st.session_state.faithfulness = min(100, max(10, evaluated_faithfulness))
+        st.session_state.relevancy = min(100, max(10, evaluated_relevancy))
+        st.session_state.hallucination = min(80, max(0, evaluated_hallucination))
+        st.toast("Evaluation metrics updated successfully!", icon="✅")
 
     st.markdown("---")
 
-    # Section 1: Sliders Calibration (Explicit HTML override to pure black)
-    st.markdown("<h3 style='color: #000000; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.5rem;'>1. System Metric Calibration</h3>", unsafe_allow_html=True)
+    # Section 1: Sliders Calibration (Task 4: Title is Black)
+    st.markdown("<h3 style='color: #000000; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem;'>1. System Metric Calibration</h3>", unsafe_allow_html=True)
     
     slide_faithfulness = st.slider(
         "Faithfulness (Ragas) (%)",
@@ -365,7 +364,8 @@ with col_left:
         help="Detects completely fabricated details contradicting context facts. 💡 Ideal Target: < 5%"
     )
 
-    st.markdown("<h3 style='color: #000000; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.5rem; margin-top: 1rem;'>2. KPI Weight Configuration</h3>", unsafe_allow_html=True)
+    # Section 2: Weight Configuration (Task 4: Title is Black)
+    st.markdown("<h3 style='color: #000000; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem; margin-top: 1rem;'>2. KPI Weight Configuration</h3>", unsafe_allow_html=True)
     weight_faith = st.slider(
         "Faithfulness Impact Weight",
         min_value=0, max_value=100, step=5, value=40,
@@ -385,7 +385,7 @@ with col_left:
 # Mathematical Engine calculation processes
 total_weight = weight_faith + weight_rel + weight_hall
 if total_weight == 0:
-    total_weight = 1  # Prevent ZeroDivisionError
+    total_weight = 1
 
 f_factor = (weight_faith / total_weight)
 r_factor = (weight_rel / total_weight)
@@ -402,7 +402,7 @@ projected_csat = 1.0 + (quality_score / 100.0) * 4.0
 
 # Right Analytics Workspace Panel
 with col_right:
-    # 3 High-Impact KPI Cards (Clean high-contrast Light Theme + Dark highlight combo)
+    # 3 High-Impact KPI Cards (Task 4: Card Headers are Black)
     kpi_col1, kpi_col2, kpi_col3 = st.columns(3)
     
     with kpi_col1:
@@ -417,7 +417,6 @@ with col_right:
         """, unsafe_allow_html=True)
         
     with kpi_col2:
-        # Dynamic Multi-Tier Churn Severity Thresholds
         if churn_risk <= 20.0:
             churn_delta = "● Low Risk"
             churn_color = "#10b981"
@@ -439,7 +438,6 @@ with col_right:
         """, unsafe_allow_html=True)
         
     with kpi_col3:
-        # Dark card with high-contrast emerald text for the premium monetization goal
         st.markdown(f"""
         <div style="background-color: #0f172a; padding: 20px; border-radius: 12px; border: 1px solid #1e293b; border-top: 4px solid #10b981; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: relative; overflow: hidden;">
             <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #94a3b8; tracking-wider">Projected Customer CSAT</span>
@@ -452,21 +450,19 @@ with col_right:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Plotly Timeline Chart (Enhanced styling matching the pareto container)
-    st.markdown("<h3 style='color: #000000; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.5rem;'>Quality Baseline Timeline</h3>", unsafe_allow_html=True)
+    # Plotly Timeline Chart (Task 4: Title & Axes/Legend are Black)
+    st.markdown("<h3 style='color: #000000; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem;'>Quality Baseline Timeline</h3>", unsafe_allow_html=True)
     baseline_runs = [55.0, 58.5, 62.0, 71.5, 76.0]
     runs = baseline_runs + [quality_score]
     x_runs = ["Run 1", "Run 2", "Run 3", "Run 4", "Run 5", "Active"]
 
     fig = go.Figure()
-    # Safe Target Line
     fig.add_trace(go.Scatter(
         x=x_runs, y=[80]*6,
         mode="lines",
         name="Target Threshold (80%)",
         line=dict(color="#f43f5e", dash="dash", width=1.5)
     ))
-    # Active timeline curve
     fig.add_trace(go.Scatter(
         x=x_runs, y=runs,
         mode="lines+markers",
@@ -485,7 +481,6 @@ with col_right:
         yaxis=dict(tickfont=dict(color="black"))
     )
     
-    # Render inside a clean card container to match screenshot layout
     st.markdown('<div class="custom-card">', unsafe_allow_html=True)
     st.plotly_chart(fig, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
@@ -513,8 +508,8 @@ with col_right:
     </div>
     """, unsafe_allow_html=True)
 
-    # Automated release briefing memo (Premium dark terminal container layout for contrast & style)
-    st.markdown("<h3 style='color: #000000; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.5rem;'>System Quality Release Briefing</h3>", unsafe_allow_html=True)
+    # Automated release briefing memo (Task 4: Title is Black)
+    st.markdown("<h3 style='color: #000000; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem;'>System Quality Release Briefing</h3>", unsafe_allow_html=True)
     memo = f"""### 💼 PRODUCT OPERATIONS & LLM EVALUATION BRIEF
 Generated: {datetime.now().strftime('%B %d, %Y')}
 Author: Dhaval Kareliya | AI Product Management Operations
@@ -543,7 +538,7 @@ DECISION ROADMAP:
 
     st.code(memo, language="markdown")
 
-# Premium Minimalist Footer Panel (Aligned cleanly matching reference)
+# Premium Minimalist Footer Panel
 st.markdown("""
 <div style="border-top: 1px solid #e2e8f0; margin-top: 48px; padding-top: 24px; padding-bottom: 24px;">
     <div style="max-w-[1600px] mx-auto flex flex-col sm:flex-row justify-between align-items: center; gap: 12px; font-size: 12px; color: #64748b;">
