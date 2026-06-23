@@ -128,17 +128,19 @@ st.markdown("""
   div.stApp .scenario-title {
     color: #000000 !important;
     font-weight: 800 !important;
-    font-size: 15px !important; /* Increased by 2% from previous 13px base and polished to be visually prominent */
+    font-size: 15px !important;
     display: block !important;
   }
   div.stApp .scenario-text {
-    color: #475569 !important;
-    font-size: 11.22px !important; /* Scaled for visual harmony */
+    color: #000000 !important; /* Force to solid black for high contrast */
+    font-size: 11.50px !important; /* Increased by 2% for improved accessibility */
     line-height: 1.5 !important;
   }
   div.stApp .scenario-expected {
+    color: #000000 !important; /* Force to solid black for high contrast */
     font-weight: 700 !important;
-    font-size: 11.22px !important;
+    font-size: 11.50px !important; /* Increased by 2% for improved accessibility */
+    display: block !important;
   }
 </style>
 """, unsafe_allow_html=True)
@@ -253,18 +255,18 @@ Product managers run these evaluations (Evals) using golden datasets to avoid de
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 16px;">
 <div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
 <p class="scenario-title" style="font-weight: 800 !important; color: #000000 !important; font-size: 15px !important; margin: 0 0 4px 0; display: block !important;">Scenario A: Hallucinated Fact</p>
-<p class="scenario-text" style="font-size: 11.22px !important; color: #475569 !important; margin: 0 0 8px 0; line-height: 1.5;">The model promised a '10-day return policy' when the source context states 'no refund policy'.</p>
-<p class="scenario-expected" style="font-size: 11.22px !important; font-weight: 700 !important; color: #b45309 !important; margin: 0;">Expected: Faithfulness ~10%, Hallucination Rate ~70%</p>
+<p class="scenario-text" style="font-size: 11.50px !important; color: #000000 !important; margin: 0 0 8px 0; line-height: 1.5;">The model promised a '10-day return policy' when the source context states 'no refund policy'.</p>
+<p class="scenario-expected" style="font-size: 11.50px !important; font-weight: 700 !important; color: #000000 !important; margin: 0;">Expected: Faithfulness ~10%, Hallucination Rate ~70%</p>
 </div>
 <div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
 <p class="scenario-title" style="font-weight: 800 !important; color: #000000 !important; font-size: 15px !important; margin: 0 0 4px 0; display: block !important;">Scenario B: Off-Topic Answer</p>
-<p class="scenario-text" style="font-size: 11.22px !important; color: #475569 !important; margin: 0 0 8px 0; line-height: 1.5;">The model ignored the pricing question and began advertising shoe deals instead.</p>
-<p class="scenario-expected" style="font-size: 11.22px !important; font-weight: 700 !important; color: #b91c1c !important; margin: 0;">Expected: Relevancy ~30%, CSAT decreases severely.</p>
+<p class="scenario-text" style="font-size: 11.50px !important; color: #000000 !important; margin: 0 0 8px 0; line-height: 1.5;">The model ignored the pricing question and began advertising shoe deals instead.</p>
+<p class="scenario-expected" style="font-size: 11.50px !important; font-weight: 700 !important; color: #000000 !important; margin: 0;">Expected: Relevancy ~30%, CSAT decreases severely.</p>
 </div>
 <div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
 <p class="scenario-title" style="font-weight: 800 !important; color: #000000 !important; font-size: 15px !important; margin: 0 0 4px 0; display: block !important;">Scenario C: Perfect Grounding</p>
-<p class="scenario-text" style="font-size: 11.22px !important; color: #475569 !important; margin: 0 0 8px 0; line-height: 1.5;">The model correctly extracted details and complied strictly with the strict refund policy context.</p>
-<p class="scenario-expected" style="font-size: 11.22px !important; font-weight: 700 !important; color: #047857 !important; margin: 0;">Expected: Quality >95%, Churn Risk minimized.</p>
+<p class="scenario-text" style="font-size: 11.50px !important; color: #000000 !important; margin: 0 0 8px 0; line-height: 1.5;">The model correctly extracted details and complied strictly with the strict refund policy context.</p>
+<p class="scenario-expected" style="font-size: 11.50px !important; font-weight: 700 !important; color: #000000 !important; margin: 0;">Expected: Quality >95%, Churn Risk minimized.</p>
 </div>
 </div>
 </div>
