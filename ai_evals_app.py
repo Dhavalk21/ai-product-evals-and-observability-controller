@@ -15,6 +15,16 @@ st.set_page_config(
 # Custom CSS Injection to guarantee exact compliance with all Tasks
 st.markdown("""
 <style>
+
+/* Color of the interactive slider handle */
+div[data-baseweb="slider"] [role="slider"] {
+  background-color: #2563eb !important; /* Change #2563eb to your preferred hex color */
+}
+
+/* Color of the active track line */
+div[data-baseweb="slider"] > div > div {
+  background: #2563eb !important; /* Change #2563eb to your preferred hex color */
+}
   /* Task 5: Spacing - Add more padding on left and right side (around 3% more than default) */
   div[class*="stAppViewBlockContainer"] {
     padding-left: 6% !important;
@@ -290,7 +300,7 @@ with col_left:
     """, unsafe_allow_html=True)
     
     # Task 2: Active blue preset selector buttons vs. inactive white/black outline buttons
-    st.markdown("<p style='font-size:12px; font-weight:600; color:#000000;'>Choose a Scenario:</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size:14px; font-weight:600; color:#000000;'>Choose a Scenario:</p>", unsafe_allow_html=True)
     p_col1, p_col2, p_col3 = st.columns(3)
     
     # Helper to load presets
@@ -549,7 +559,7 @@ with col_right:
     # Industry Standards Info Cards
     st.markdown("""
     <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
-        <span style="font-size: 18px; font-weight: bold; background-color: #f5f3ff; color: #4f46e5; padding: 4px 12px; border-radius: 6px; text-transform: uppercase; border: 1px solid #ddd6fe;">
+        <span style="font-size: 16px; font-weight: bold; background-color: #f5f3ff; color: #4f46e5; padding: 4px 12px; border-radius: 6px; text-transform: uppercase; border: 1px solid #ddd6fe;">
             Ragas &amp; DeepEval Framework Compliance
         </span>
         <div style="display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px;">
