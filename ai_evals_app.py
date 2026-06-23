@@ -260,7 +260,7 @@ Product managers run these evaluations (Evals) using golden datasets to avoid de
 </div>
 <div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
 <p class="scenario-title" style="font-weight: 800 !important; color: #000000 !important; font-size: 16px !important; margin: 0 0 4px 0; display: block !important;">Scenario B: Off-Topic Answer</p>
-<p class="scenario-text" style="font-size: 14px !important; color: #000000 !important; margin: 0 0 8px 0; line-height: 1.5;">The model ignored the pricing question and began advertising shoe deals instead.</p>
+<p class="scenario-text" style="font-size: 14px !important; color: #000000 !important; margin: 0 0 8px 0; line-height: 1.5;">The model ignored the pricing question, goes off-track and began advertising shoe deals instead.</p>
 <p class="scenario-expected" style="font-size: 13px !important; font-weight: 700 !important; color: #000000 !important; margin: 0;">Expected: Relevancy ~30%, CSAT decreases severely.</p>
 </div>
 <div style="padding: 16px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
@@ -549,19 +549,19 @@ with col_right:
     # Industry Standards Info Cards
     st.markdown("""
     <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
-        <span style="font-size: 11px; font-weight: bold; background-color: #f5f3ff; color: #4f46e5; padding: 4px 12px; border-radius: 6px; text-transform: uppercase; border: 1px solid #ddd6fe;">
+        <span style="font-size: 18px; font-weight: bold; background-color: #f5f3ff; color: #4f46e5; padding: 4px 12px; border-radius: 6px; text-transform: uppercase; border: 1px solid #ddd6fe;">
             Ragas &amp; DeepEval Framework Compliance
         </span>
         <div style="display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px;">
           <div>
-            <p style="font-size: 13px; font-weight: 700; color: #0f172a; margin: 0;">Ragas Framework: Faithfulness</p>
-            <p style="font-size: 11px; color: #64748b; margin: 4px 0 0 0; line-height: 1.5;">
+            <p style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">Ragas Framework: Faithfulness</p>
+            <p style="font-size: 13px; color: #64748b; margin: 4px 0 0 0; line-height: 1.5;">
                 Utilized to ensure information is strictly grounded. Ragas extracts key factual statements from the generated answer and queries an LLM Judge to check if each statement is explicitly backed by the retrieved context papers.
             </p>
           </div>
           <div>
-            <p style="font-size: 13px; font-weight: 700; color: #0f172a; margin: 0;">DeepEval: Relevancy &amp; Hallucinations</p>
-            <p style="font-size: 11px; color: #64748b; margin: 4px 0 0 0; line-height: 1.5;">
+            <p style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">DeepEval: Relevancy &amp; Hallucinations</p>
+            <p style="font-size: 13px; color: #64748b; margin: 4px 0 0 0; line-height: 1.5;">
                 Maintains output quality. DeepEval maps the cosine similarity between generated responses and initial prompt intents to compute answer relevancy, and cross-references source contradictions to output a strict hallucination percentage.
             </p>
           </div>
