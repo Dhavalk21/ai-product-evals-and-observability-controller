@@ -11,105 +11,158 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Premium CSS Injection
-st.markdown("""
-<style>
-  /* Global page resets and font smoothing */
-  .stApp {
-    background-color: #f8fafc;
-  }
-  
-  /* Custom styled container blocks */
-  .custom-card {
-    background-color: white;
-    padding: 24px;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-    margin-bottom: 24px;
-  }
-  
-  /* Accent borders */
-  .accent-indigo { border-top: 4px solid #4f46e5; }
-  .accent-emerald { border-top: 4px solid #10b981; }
-  .accent-slate { border-top: 4px solid #0f172a; }
-
-  /* Interactive button states */
-  .stButton > button {
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    transition: all 0.2s ease-in-out !important;
-  }
-  
-  /* Custom tooltips */
-  .tooltip-trigger {
-    color: #4f46e5;
-    cursor: help;
-    font-weight: bold;
-    font-size: 11px;
-    background-color: #f5f3ff;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #ddd6fe;
-  }
-</style>
-""", unsafe_allow_html=True)
-
-# Initialize Session States for Playground Presets
+# Initialize Session States for Playground Presets & Expander Toggles
+if 'show_guide' not in st.session_state:
+    st.session_state.show_guide = True  # Default open for onboarding, toggleable via header button
 if 'play_context' not in st.session_state:
-    st.session_state.play_context = "we have 2 plan: 1) gold client 20 euro and 14 day refund policy. 2) silver plan 10 euro and no refund policy"
+    st.session_state.play_context = "The school science lab allows students to reserve a microscope workstation for 45 minutes. Safety goggles must be worn at all times, and there is no reservation fee."
 if 'play_query' not in st.session_state:
-    st.session_state.play_query = "What is the cost of the silver plan, and what is your refund policy?"
+    st.session_state.play_query = "How long can I reserve a workstation, and is there a reservation fee?"
 if 'play_output' not in st.session_state:
-    st.session_state.play_output = "Silver plan cost 10 euro and 10 day return policy"
+    st.session_state.play_output = "You can reserve a workstation for 10 minutes and there is a 5 dollar booking fee."
 if 'active_preset' not in st.session_state:
     st.session_state.active_preset = "hallucinated"
 
 # Default Baseline Sliders
 if 'faithfulness' not in st.session_state:
-    st.session_state.faithfulness = 100
+    st.session_state.faithfulness = 10
 if 'relevancy' not in st.session_state:
-    st.session_state.relevancy = 100
+    st.session_state.relevancy = 85
 if 'hallucination' not in st.session_state:
-    st.session_state.hallucination = 0
+    st.session_state.hallucination = 70
 
-# Widescreen Executive Header Panel (Matching reference style)
+# Custom Premium CSS Injection for professional blue branding & contrast fixes
 st.markdown("""
-<div style="background-color: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
-    <div style="display: flex; flex-direction: column; md-flex-direction: row; justify-content: space-between; align-items: flex-start; gap: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px; margin-bottom: 16px;">
-        <div>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px;">
-                <span style="background-color: #f8fafc; color: #475569; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #e2e8f0;">
-                    AI Product Operations • Quality Assurance Framework
-                </span>
-                <span style="background-color: #f5f3ff; color: #4f46e5; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #ddd6fe; white-space: nowrap;">
-                    Designed by Dhaval Kareliya | 
-                    <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" style="text-decoration: none; color: #4338ca; font-weight: bold;">LinkedIn</a> • 
-                    <a href="https://github.com/YOUR_USERNAME" target="_blank" style="text-decoration: none; color: #4338ca; font-weight: bold;">GitHub</a>
-                </span>
-            </div>
-            <h1 style="color: #0f172a; font-size: 26px; font-weight: 800; margin: 0 0 4px 0; letter-spacing: -0.025em;">
-                Production AI Evals &amp; Observability Controller
-            </h1>
-            <p style="color: #64748b; font-size: 14px; margin: 0; line-height: 1.5;">
-                Verify, monitor, and establish reliable release gates for LLM system performance. Define multidimensional criteria to proactively predict user retention and satisfaction.
-            </p>
-        </div>
-    </div>
-</div>
+<style>
+  /* Page Padding Spacing Expansion */
+  div[class*="stAppViewBlockContainer"] {
+    padding-left: 6% !important;
+    padding-right: 6% !important;
+    max-width: 95% !important;
+  }
+
+  /* Force highly legible text colors on all native Streamlit widgets */
+  div[data-testid="stTextArea"] textarea, div[data-testid="stTextInput"] input {
+    color: #0f172a !important;
+    background-color: #ffffff !important;
+  }
+  div[data-testid="stTextArea"] label p, div[data-testid="stTextInput"] label p {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+  }
+  
+  /* Expander Styling & Visibility Contrast Fix */
+  div[data-testid="stExpander"] {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+  }
+  div[data-testid="stExpander"] div[role="button"] p {
+    color: #1e3a8a !important; /* Premium deep blue */
+    font-weight: 700 !important;
+    font-size: 15px !important;
+  }
+  div[data-testid="stExpander"] div[data-testid="stExpanderDetails"] {
+    color: #1e293b !important;
+    background-color: #ffffff !important;
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  /* Slider Blue Accents */
+  div[data-baseweb="slider"] div {
+    background-color: #2563eb !important;
+  }
+
+  /* Premium Interactive Blue Buttons */
+  button[data-testid="baseButton-primary"] {
+    background-color: #2563eb !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+  }
+  button[data-testid="baseButton-primary"]:hover {
+    background-color: #1d4ed8 !important;
+    color: white !important;
+  }
+  
+  /* Secondary Active/Inactive outlines */
+  button[data-testid="baseButton-secondary"] {
+    border: 1px solid #bfdbfe !important;
+    color: #1e40af !important;
+    background-color: #eff6ff !important;
+    border-radius: 8px !important;
+  }
+  button[data-testid="baseButton-secondary"]:hover {
+    background-color: #dbeafe !important;
+    color: #1e40af !important;
+  }
+</style>
 """, unsafe_allow_html=True)
 
-# Collapsible Guide (Matching "Show Guide" trigger styling)
-with st.expander("Show Guide: How to Run LLM Quality Evaluations (With Examples)", expanded=False):
+# Widescreen Executive Header Panel (Col proportion: Title vs Actions Menu)
+col_title, col_actions = st.columns([6, 4])
+
+with col_title:
+    st.markdown("""
+    <div style="background-color: white; padding: 12px 12px 12px 0px; border-radius: 12px; margin-bottom: 8px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px;">
+            <span style="background-color: #f8fafc; color: #475569; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #e2e8f0;">
+                AI Product Operations • Quality Assurance Framework
+            </span>
+            <span style="background-color: #f5f3ff; color: #4f46e5; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 9999px; border: 1px solid #ddd6fe; white-space: nowrap;">
+                Designed by Dhaval Kareliya
+            </span>
+        </div>
+        <h1 style="color: #0f172a; font-size: 26px; font-weight: 800; margin: 0 0 4px 0; letter-spacing: -0.025em;">
+            Production AI Evals &amp; Observability Controller
+        </h1>
+        <p style="color: #64748b; font-size: 14px; margin: 0; line-height: 1.5;">
+            Verify, monitor, and establish reliable release gates for LLM system performance. Define multidimensional criteria to proactively predict user retention and satisfaction.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_actions:
+    st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
+    act_col1, act_col2, act_col3 = st.columns(3)
+    
+    with act_col1:
+        if st.button("Show Guide", use_container_width=True, key="hdr_show_guide"):
+            st.session_state.show_guide = not st.session_state.show_guide
+            st.rerun()
+            
+    with act_col2:
+        if st.button("Test Case 1", use_container_width=True, key="hdr_tc1", help="Loads a perfect grounded response example"):
+            st.session_state.play_context = "The school science lab allows students to reserve a microscope workstation for 45 minutes. Safety goggles must be worn at all times, and there is no reservation fee."
+            st.session_state.play_query = "How long can I reserve a microscope workstation, and is there any fee?"
+            st.session_state.play_output = "You can reserve a workstation for 45 minutes, and there is no reservation fee."
+            st.session_state.active_preset = "grounded"
+            st.session_state.faithfulness = 100
+            st.session_state.relevancy = 100
+            st.session_state.hallucination = 0
+            st.rerun()
+            
+    with act_col3:
+        if st.button("Test Case 2", use_container_width=True, key="hdr_tc2", help="Loads a hallucinated fact response example"):
+            st.session_state.play_context = "The school science lab allows students to reserve a microscope workstation for 45 minutes. Safety goggles must be worn at all times, and there is no reservation fee."
+            st.session_state.play_query = "How long can I reserve a workstation, and is there a reservation fee?"
+            st.session_state.play_output = "You can reserve a workstation for 10 minutes and there is a 5 dollar booking fee."
+            st.session_state.active_preset = "hallucinated"
+            st.session_state.faithfulness = 10
+            st.session_state.relevancy = 85
+            st.session_state.hallucination = 70
+            st.rerun()
+
+# Collapsible Guide (Toggled by st.session_state.show_guide)
+guide_expanded = st.session_state.show_guide
+with st.expander("Show Guide: How to Run LLM Quality Evaluations (With Examples)", expanded=guide_expanded):
     st.markdown("""
     Product managers run these evaluations (Evals) using golden datasets to avoid deploying a model that outputs false facts or fails user queries.
     
     #### 📋 Step-by-Step Instructions:
-    1. Click on any of the scenario buttons inside the **Live Evaluation Playground** panel (e.g. *⚠️ Hallucinated Fact*).
+    1. Click on either **Test Case 1** or **Test Case 2** buttons inside the top right header menu to load sample data.
     2. Inspect the source context (what the database knows) and compare it with the LLM response.
     3. Click the blue **"Run AI-Judge Evaluation Simulation"** button. The simulated judge reads, checks, and scores the inputs.
     4. Look at the top KPI cards—the evaluation results instantly update your **Predicted Churn Risk** and **Expected CSAT**!
@@ -123,19 +176,19 @@ with st.expander("Show Guide: How to Run LLM Quality Evaluations (With Examples)
     with g_col3:
         st.success("**Scenario C: Perfect Grounding**\nThe model correctly extracted details and complied strictly with the strict refund policy context.\n\n*Expected Evaluation: Quality >90%, Churn Risk minimized.*")
 
-# Main Content Columns (Layout proportion: 38% Left, 62% Right)
-col_left, col_right = st.columns([38, 62])
+# Main Content Columns (Layout proportion with explicit spacer column for elegant separation)
+col_left, col_spacer, col_right = st.columns([36, 6, 58])
 
 with col_left:
     
-    # Premium Dark Playground Card (Deep Navy Slate style to match reference)
+    # Premium Dark Blue Playground Card (Color tweaked to eliminate high contrast clashes)
     st.markdown("""
-    <div style="background-color: #0f172a; padding: 24px; border-radius: 12px; border: 1px solid #1e293b; color: #f8fafc; margin-bottom: 24px;">
+    <div style="background-color: #1e3a8a; padding: 24px; border-radius: 12px; border: 1px solid #1d4ed8; color: #f8fafc; margin-bottom: 24px;">
         <h3 style="color: white; font-size: 16px; font-weight: 700; margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
             <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             Live Evaluation Playground
         </h3>
-        <p style="color: #94a3b8; font-size: 12px; margin: 0 0 16px 0; line-height: 1.4;">
+        <p style="color: #bfdbfe; font-size: 12px; margin: 0 0 16px 0; line-height: 1.4;">
             Select an evaluation scenario or customize the fields to test the heuristic AI Judge.
         </p>
     </div>
@@ -326,7 +379,7 @@ with col_right:
     
     with kpi_col1:
         st.markdown(f"""
-        <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #4f46e5; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
+        <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #2563eb; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
             <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #64748b; tracking-wider">Overall Quality Index</span>
             <span style="display: block; font-size: 28px; font-weight: 800; color: #0f172a; margin-top: 4px;">{quality_score:.1f}%</span>
             <span style="display: block; font-size: 11px; color: {'#10b981' if quality_score >= 80 else '#ef4444'}; font-weight: 700; margin-top: 8px;">
@@ -348,7 +401,7 @@ with col_right:
             churn_color = "#ef4444"
 
         st.markdown(f"""
-        <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #0f172a; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
+        <div style="background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; border-top: 4px solid #1e293b; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); position: relative; overflow: hidden;">
             <span style="display: block; text-transform: uppercase; font-size: 11px; font-weight: 700; color: #64748b; tracking-wider">Predicted Churn Risk</span>
             <span style="display: block; font-size: 28px; font-weight: 800; color: #0f172a; margin-top: 4px;">{churn_risk:.1f}%</span>
             <span style="display: block; font-size: 11px; color: {churn_color}; font-weight: 700; margin-top: 8px;">
