@@ -94,7 +94,7 @@ graph TD
     style MemoReport fill:#f0fdf4,stroke:#15803d,stroke-width:2px,color:#14532d
 ```
 
-## 👨‍💻 Author & Contact
+## 👨‍💻 Author
 Designed and engineered with precision by **Dhaval Kareliya**.
 
 * 💼 **LinkedIn:** [Dhaval Kareliya](https://www.linkedin.com/in/dhavalk21/)
